@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 
+
 android {
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.stephanieangulo.flost"
