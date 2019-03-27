@@ -1,4 +1,4 @@
-package com.stephanieangulo.flost.Models;
+package com.specialtopics.flost.Models;
 
 public class ClaimedItem {
 

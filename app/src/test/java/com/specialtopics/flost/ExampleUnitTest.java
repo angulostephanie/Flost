@@ -1,4 +1,4 @@
-package com.stephanieangulo.flost;
+package com.specialtopics.flost;
 
 import org.junit.Test;
 

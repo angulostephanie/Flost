@@ -1,9 +1,9 @@
-package com.stephanieangulo.flost.Controllers;
+package com.specialtopics.flost.Controllers;
 
 public class DatabaseConnection {
     /*
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost/flost";
+    private static final String DB_URL = "jdbc:mysql://localhost/com.specialtopics.flost";
     private  static final String USER = "root";
     private static final String PASSWORD = "";
 

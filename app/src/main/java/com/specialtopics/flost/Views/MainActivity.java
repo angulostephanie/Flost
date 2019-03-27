@@ -1,9 +1,9 @@
-package com.stephanieangulo.flost.Views;
+package com.specialtopics.flost.Views;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.stephanieangulo.flost.R;
+import com.specialtopics.flost.R;
 
 public class MainActivity extends AppCompatActivity {
 

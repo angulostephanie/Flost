@@ -1,4 +1,4 @@
-package com.stephanieangulo.flost;
+package com.specialtopics.flost;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.stephanieangulo.flost", appContext.getPackageName());
+        assertEquals("com.stephanieangulo.com.specialtopics.flost", appContext.getPackageName());
     }
 }
