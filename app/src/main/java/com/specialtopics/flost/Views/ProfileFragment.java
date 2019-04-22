@@ -2,6 +2,7 @@ package com.specialtopics.flost.Views;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -33,17 +34,27 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState){
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        mContext = getContext();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         Log.d("UserID", mUser.getUid());
 
         emailTextView = view.findViewById(R.id.emailText);
         logoutBtn = view.findViewById(R.id.logoutBtn);
-
+        logoutBtn.setOnClickListener(v -> logout());
         emailTextView.setText("Hello " + mUser.getDisplayName());
 
         return view;
+    }
+
+    private void logout() {
+        // mUser becomes null after this.
+        mAuth.signOut();
+        updateUI();
+    }
+    private void updateUI() {
+        Intent loginIntent = new Intent(mContext, LoginActivity.class);
+        startActivity(loginIntent);
     }
 
 }

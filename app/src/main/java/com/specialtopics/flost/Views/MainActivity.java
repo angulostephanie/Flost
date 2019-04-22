@@ -1,7 +1,6 @@
 package com.specialtopics.flost.Views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -71,14 +70,4 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
-    private void logout() {
-        // mUser becomes null after this.
-        mAuth.signOut();
-        updateUI();
-    }
-    private void updateUI() {
-        Intent loginIntent = new Intent(mContext, LoginActivity.class);
-        startActivity(loginIntent);
-    }
 }

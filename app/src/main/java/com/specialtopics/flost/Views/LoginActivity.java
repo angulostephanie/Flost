@@ -18,15 +18,17 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.specialtopics.flost.Models.User;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.specialtopics.flost.R;
 
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";
@@ -92,6 +94,7 @@ public class LoginActivity extends Activity {
 
     private void updateUI() {
         FirebaseUser user = mAuth.getCurrentUser();
+
         if (user != null) {
             Log.d(TAG,"HELLO THERE " + user.getEmail());
             Intent intent = new Intent(mContext, MainActivity.class);
@@ -111,6 +114,7 @@ public class LoginActivity extends Activity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mAuth.getCurrentUser();
+
                         addUserToDB(user);
                         updateUI();
 
@@ -125,6 +129,53 @@ public class LoginActivity extends Activity {
     }
 
     private void addUserToDB(FirebaseUser user) {
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        String url = "http://10.0.2.2:8080/loginUser";
+
+        String first = user.getDisplayName().split(" ")[0];
+
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            jsonParams.put("user_id", user.getUid());
+            jsonParams.put("first_name", first);
+            jsonParams.put("email", user.getEmail());
+
+            try {
+                StringEntity entity = new StringEntity(jsonParams.toString());
+                client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        Log.d(TAG, "Adding this user to the mysql :)!");
+                        // move update ui function here
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.d(TAG, "faileddddd!");
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        // add a progress bar animation here! :)
+                    }
+                });
+            } catch(UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+        /*
         String uid = user.getUid();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference userNameRef = rootRef.child("users").child(uid);
@@ -159,6 +210,6 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, databaseError.getMessage()); //Don't ignore errors!
             }
         });
-
+    */
     }
 }
