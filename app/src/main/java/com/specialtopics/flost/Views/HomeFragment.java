@@ -24,7 +24,6 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -86,25 +85,27 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         setUpRecyclerView();
 
         addBtn.setOnClickListener(v -> {
-           // postItemToDB();
+            postItemToDB("airpods", "fake description haha", "found",
+                    "johnson", 20.0);
         });
     }
 
-    private void postItemToDB() {
+    private void postItemToDB(String itemName, String description, String type, String location, double reward) {
         AsyncHttpClient client = new AsyncHttpClient();
 
-        String url = "http://10.0.2.2:8080/postItems";
+        String url = "http://10.0.2.2:8080/postItem";
         JSONObject jsonParams = new JSONObject();
-        Random r = new Random();
+
+        int hash = (itemName + mUser.getUid() + description + type + location).hashCode();
 
         try {
-            jsonParams.put("item_id", r.nextInt(10000)); // int
+            jsonParams.put("item_id", hash); // int
             jsonParams.put("user_id", mUser.getUid());
-            jsonParams.put("item_name", "hydroflask");
-            jsonParams.put("item_desc", "description");
-            jsonParams.put("item_type", "lost");
-            jsonParams.put("item_location", "fowler");
-            jsonParams.put("item_reward", 0.0); // double
+            jsonParams.put("item_name", itemName);
+            jsonParams.put("item_desc", description);
+            jsonParams.put("item_type", type);
+            jsonParams.put("item_location", location);
+            jsonParams.put("item_reward", reward); // double
 
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
