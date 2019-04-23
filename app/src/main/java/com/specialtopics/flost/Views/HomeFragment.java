@@ -3,13 +3,16 @@ package com.specialtopics.flost.Views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,6 +46,9 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     private RecyclerView recyclerView;
     private ItemAdapter mAdapter;
     private View view;
+    private TabLayout tabLayout;
+    private FrameLayout frameLayout;
+
     public HomeFragment(){
 
     }
@@ -79,16 +85,57 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         mContext = getContext();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        recyclerView = view.findViewById(R.id.home_recycler_view);
         addBtn = view.findViewById(R.id.fabAdd);
-        mItems = Item.getTemporaryData();
-        setUpRecyclerView();
+        frameLayout = view.findViewById(R.id.result_framelayout);
 
+        setUpTabListeners();
         addBtn.setOnClickListener(v -> {
             postItemToDB("airpods", "fake description haha", "found",
                     "johnson", 20.0);
         });
     }
+
+    private void setUpTabListeners(){
+        tabLayout = view.findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+// get the current selected tab's position and replace the fragment accordingly
+                Fragment fragment = null;
+                switch (tab.getPosition()) {
+                    case 0:
+                        fragment = new HomeFragmentLost();
+                        break;
+                    case 1:
+                        fragment = new HomeFragmentFound();
+                        break;
+                }
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.result_framelayout, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                ft.commit();
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 
     private void postItemToDB(String itemName, String description, String type, String location, double reward) {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -137,14 +184,6 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    private void setUpRecyclerView() {
-        mAdapter = new ItemAdapter(getActivity(), mItems);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
-                LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setNestedScrollingEnabled(false);
-    }
+
 
 }
