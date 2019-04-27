@@ -9,13 +9,24 @@
     android:paddingBottom="4dp"
     android:gravity="center_vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <SearchView
-        android:layout_width="356dp"
-        android:layout_height="33dp"
-        android:background="@drawable/border"
-        android:searchHintIcon="@android:drawable/ic_menu_search"
-        android:searchIcon="@android:drawable/ic_menu_search" />
+        <SearchView
+            android:layout_width="356dp"
+            android:layout_height="33dp"
+            android:background="@drawable/border"
+            android:searchHintIcon="@android:drawable/ic_menu_search"
+            android:searchIcon="@android:drawable/ic_menu_search" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
 
     <android.support.design.widget.TabLayout
         android:layout_width="match_parent"
