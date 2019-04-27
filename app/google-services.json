@@ -1,52 +1,45 @@
 {
   "project_info": {
-    "project_number": "1080946725471",
-    "firebase_url": "https://flost-specialtopics.firebaseio.com",
-    "project_id": "flost-specialtopics",
-    "storage_bucket": "flost-specialtopics.appspot.com"
+    "project_number": "302127086091",
+    "firebase_url": "https://flostapp-1556168232146.firebaseio.com",
+    "project_id": "flostapp-1556168232146",
+    "storage_bucket": "flostapp-1556168232146.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1080946725471:android:35a3139beef41e24",
+        "mobilesdk_app_id": "1:302127086091:android:35a3139beef41e24",
         "android_client_info": {
           "package_name": "com.specialtopics.flost"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1080946725471-rhe3d2egog8ciaqnubmemm3jfo5k8dqr.apps.googleusercontent.com",
+          "client_id": "302127086091-eracut3h3qrcln0a4tl292keff69pf4b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.specialtopics.flost",
-            "certificate_hash": "0bab68c5b91c61331bfc06b6be57c82a221a5e2d"
+            "certificate_hash": "8e249747a53c032eb4ae9788fb74fcb6ae0242b1"
           }
         },
         {
-          "client_id": "1080946725471-ji1eggdekm4i3obbgl4mnitbs7lljf67.apps.googleusercontent.com",
+          "client_id": "302127086091-es2d4803pni58crrri2i22pnfru2oqo6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBINat9rsfSE_BaVozRprxBYfX_ukOWNMc"
+          "current_key": "AIzaSyBaUgMnZWCLNe46kA5d8DDxtzEwyd5UfcI"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1080946725471-ji1eggdekm4i3obbgl4mnitbs7lljf67.apps.googleusercontent.com",
+              "client_id": "302127086091-es2d4803pni58crrri2i22pnfru2oqo6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }
