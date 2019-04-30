@@ -89,8 +89,8 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         SentMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            messageText = (TextView) itemView.findViewById(R.id.sent_message_body);
+            timeText = (TextView) itemView.findViewById(R.id.sent_message_time);
         }
 
         void bind(Message message) {
@@ -108,9 +108,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         ReceivedMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
-            nameText = (TextView) itemView.findViewById(R.id.text_message_name);
+            messageText = (TextView) itemView.findViewById(R.id.received_message_body);
+            timeText = (TextView) itemView.findViewById(R.id.received_message_time);
+            nameText = (TextView) itemView.findViewById(R.id.received_message_name);
             profileImage = (ImageView) itemView.findViewById(R.id.image_message_profile);
         }
 
@@ -122,7 +122,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
             nameText.setText(message.getSender());
 
-            // Insert the profile image from the URL into the ImageView.
+            // TODO Insert the profile image from the URL into the ImageView.
             //Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);
         }
     }

@@ -3,4 +3,10 @@
     <string name="signin_message">Log in with your Oxy info to find/post lost items</string>
     <string name="label_compen">Compensation</string>
     <string name="username">username</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_home">Home</string>
+    <string name="connect">Connected</string>
+    <string name="disconnect">Disconnected, Please check your internet connection</string>
+    <string name="error_connect">Failed to connect</string>
 </resources>

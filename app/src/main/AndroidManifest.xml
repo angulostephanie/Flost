@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.specialtopics.flost">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,13 +16,19 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name="com.specialtopics.flost.Views.LoginActivity"
             android:theme="@style/SplashTheme">
+
+        </activity>
+        <activity android:name="com.specialtopics.flost.Views.MainActivity"
+            android:exported="true">
+        </activity>
+
+        <activity android:name="com.specialtopics.flost.Views.ChatActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.specialtopics.flost.Views.MainActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"

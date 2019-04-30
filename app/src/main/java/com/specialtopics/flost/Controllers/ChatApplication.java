@@ -19,7 +19,8 @@ public class ChatApplication extends Application {
             throw new RuntimeException(e);
         }
     }
-    public Socket getmSocket(){
+    public Socket getSocket(){
         return mSocket;
     }
+
 }

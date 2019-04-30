@@ -1,9 +1,13 @@
 package com.specialtopics.flost.Views;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -24,24 +28,46 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         mContext = this;
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
 
-        emailTextView = findViewById(R.id.emailText);
-        logoutBtn = findViewById(R.id.logoutBtn);
-
-        emailTextView.setText("Hello " + mUser.getDisplayName());
-        logoutBtn.setOnClickListener(v -> logout());
+        loadFragment(new HomeFragment());
     }
 
-    private void logout() {
-        // mUser becomes null after this.
-        mAuth.signOut();
-        updateUI();
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment;
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    fragment = new HomeFragment();
+                    loadFragment(fragment);
+                    return true;
+                case R.id.navigation_messages:
+                    //toolbar.setTitle("");
+                    fragment = new MessagesFragment();
+                    loadFragment(fragment);
+                    return true;
+                case R.id.navigation_profile:
+                    //toolbar.setTitle("");
+                    fragment = new ProfileFragment();
+                    loadFragment(fragment);
+                    return true;
+
+            }
+            return false;
+        }
+    };
+
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
-    private void updateUI() {
-        Intent loginIntent = new Intent(mContext, LoginActivity.class);
-        startActivity(loginIntent);
-    }
+
 }
