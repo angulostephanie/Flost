@@ -50,7 +50,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     private Socket mSocket;
     private String mUsername;
     private Boolean isConnected = true;
-    private Handler mTypingHandler = new Handler();
+//    private Handler mTypingHandler = new Handler();
 
     public MessagesFragment(){
         super();
@@ -74,6 +74,13 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
 
         setHasOptionsMenu(true);
 
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
         ChatApplication app = (ChatApplication) getActivity().getApplication();
         mSocket = app.getSocket();
         mSocket.on(Socket.EVENT_CONNECT,onConnect);
@@ -86,12 +93,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         mSocket.connect();
 
         startSignIn();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.chat_fragment, container, false);
+        return inflater.inflate(R.layout.activity_message_list, container, false);
     }
 
     @Override

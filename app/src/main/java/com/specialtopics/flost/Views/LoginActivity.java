@@ -18,17 +18,13 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.specialtopics.flost.Controllers.ChatApplication;
+import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
+import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class LoginActivity extends Activity {
@@ -40,6 +36,8 @@ public class LoginActivity extends Activity {
     private GoogleSignInClient mGoogleSignInClient;
     private Context mContext;
     private SignInButton loginBtn;
+    private Socket mSocket;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +46,8 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         mContext = this;
         mAuth = FirebaseAuth.getInstance();
+        ChatApplication app = (ChatApplication) getApplication();
+        mSocket = app.getSocket();
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -116,63 +116,40 @@ public class LoginActivity extends Activity {
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mAuth.getCurrentUser();
 
-                        addUserToDB(user);
+                        FlostRestClient.addUserToDB(mContext, user);
                         updateUI();
 
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Snackbar.make(findViewById(R.id.login_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                        mSocket.on("login", onLogin);
                     }
 
                     // ...
                 });
     }
 
-    private void addUserToDB(FirebaseUser user) {
-        AsyncHttpClient client = new AsyncHttpClient();
 
-        String url = "http://10.0.2.2:8080/loginUser";
+    private Emitter.Listener onLogin = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+//            JSONObject data = (JSONObject) args[0];
 
-        String first = user.getDisplayName().split(" ")[0];
+//            int numUsers;
+//            try {
+//                numUsers = data.getInt("numUsers");
+//            } catch (JSONException e) {
+//                return;
+//            }
 
-        JSONObject jsonParams = new JSONObject();
-
-        try {
-            jsonParams.put("user_id", user.getUid());
-            jsonParams.put("first_name", first);
-            jsonParams.put("email", user.getEmail());
-
-            try {
-                StringEntity entity = new StringEntity(jsonParams.toString());
-                client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "Adding this user to the mysql :)!");
-                        // move update ui function here
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d(TAG, "faileddddd!");
-                    }
-
-                    @Override
-                    public void onProgress(long bytesWritten, long totalSize) {
-                        super.onProgress(bytesWritten, totalSize);
-                        // add a progress bar animation here! :)
-                    }
-                });
-            } catch(UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        } catch(JSONException e) {
-            e.printStackTrace();
+            Intent intent = new Intent();
+            intent.putExtra("username", mAuth.getCurrentUser().getDisplayName());
+//            intent.putExtra("numUsers", numUsers);
+            setResult(RESULT_OK, intent);
+            finish();
         }
-
-
+    };
 
 
 
@@ -213,25 +190,5 @@ public class LoginActivity extends Activity {
             }
         });
     */
-    }
 
-    private Emitter.Listener onLogin = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            JSONObject data = (JSONObject) args[0];
-
-//            int numUsers;
-//            try {
-//                numUsers = data.getInt("numUsers");
-//            } catch (JSONException e) {
-//                return;
-//            }
-
-            Intent intent = new Intent();
-            intent.putExtra("username", mAuth.getCurrentUser().getDisplayName());
-//            intent.putExtra("numUsers", numUsers);
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-    };
 }
