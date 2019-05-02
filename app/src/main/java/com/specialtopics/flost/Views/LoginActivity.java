@@ -114,9 +114,10 @@ public class LoginActivity extends Activity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        System.out.println(acct.getIdToken());
+                        FlostRestClient.authenticateUser(mContext, acct.getIdToken());
 
-                        FlostRestClient.addUserToDB(mContext, user);
+
                         updateUI();
                         mSocket.on("login", onLogin);
 
