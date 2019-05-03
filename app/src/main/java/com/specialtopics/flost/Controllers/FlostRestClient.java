@@ -17,6 +17,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class FlostRestClient {
     private final static String TAG = "FlostRestClient";
+    private final static String MAIN_URL = "http://10.0.2.2:8080";
     private final static AsyncHttpClient client = new AsyncHttpClient();
 
     public FlostRestClient(){
@@ -24,7 +25,7 @@ public class FlostRestClient {
 
     public static void postItemToDB(FirebaseUser mUser, Context mContext, String itemName, String description, String type, String location, double reward) {
 
-        String url = "http://10.0.2.2:8080/postItem";
+        String url = MAIN_URL + "postItem";
         JSONObject jsonParams = new JSONObject();
 
         int hash = (itemName + mUser.getUid() + description + type + location).hashCode();
@@ -69,20 +70,18 @@ public class FlostRestClient {
     }
 
 
-    public static void addUserToDB(Context mContext, FirebaseUser user) {
+    public static void authenticateUser(Context mContext, String token) {
         AsyncHttpClient client = new AsyncHttpClient();
 
-        String url = "http://10.0.2.2:8080/loginUser";
+        String url = MAIN_URL + "/authenticateUser";
 
-        String first = user.getDisplayName().split(" ")[0];
 
+        Log.d(TAG, token);
+        Log.d(TAG, "HI THERE IM TESTING");
         JSONObject jsonParams = new JSONObject();
 
         try {
-            jsonParams.put("user_id", user.getUid());
-            jsonParams.put("first_name", first);
-            jsonParams.put("email", user.getEmail());
-
+            jsonParams.put("token", token);
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
                 client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {

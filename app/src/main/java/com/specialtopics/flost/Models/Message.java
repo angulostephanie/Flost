@@ -1,47 +1,50 @@
 package com.specialtopics.flost.Models;
 
-//public class Message {
-//
-//    //message_id - root
-//    //message_content
-//    //sender_id
-//    //receiver_id
-//    //timestamp
-//}
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Message {
 
-    public static final int TYPE_MESSAGE = 0;
-    public static final int TYPE_LOG = 1;
-    public static final int TYPE_ACTION = 2;
+    private FirebaseUser mUser;
+    String mUsername;
+    String mMessage;
+    User mSender;
+    long createdAt;
 
-    private int mType;
-    private String mMessage;
-    private String mUsername;
+//    public static final int TYPE_MESSAGE = 0;
+//    public static final int TYPE_LOG = 1;
+//    public static final int TYPE_ACTION = 2;
+//
+//    private int mType;
+//    private String mMessage;
+//    private String mUsername;
+//
+    private Message() {
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUsername = mUser.getDisplayName();
+    }
 
-    private Message() {}
-
-    public int getType() {
-        return mType;
-    };
+//    public int getType() {
+//        return mType;
+//    };
 
     public String getMessage() {
         return mMessage;
     };
 
-    public String getUsername() {
-        return mUsername;
-    };
+    public String getSender() {
+        return mSender.getUserID();
+    }
+
+    public long getCreatedAt() {
+        return createdAt = System.currentTimeMillis();
+    }
 
 
     public static class Builder {
-        private final int mType;
         private String mUsername;
         private String mMessage;
-
-        public Builder(int type) {
-            mType = type;
-        }
 
         public Builder username(String username) {
             mUsername = username;
@@ -55,7 +58,6 @@ public class Message {
 
         public Message build() {
             Message message = new Message();
-            message.mType = mType;
             message.mUsername = mUsername;
             message.mMessage = mMessage;
             return message;

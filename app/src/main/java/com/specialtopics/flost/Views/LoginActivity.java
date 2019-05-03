@@ -18,8 +18,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.specialtopics.flost.Controllers.ChatApplication;
 import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.R;
+
+import org.json.JSONObject;
+
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class LoginActivity extends Activity {
     private static final String TAG = "LoginActivity";
@@ -30,6 +36,8 @@ public class LoginActivity extends Activity {
     private GoogleSignInClient mGoogleSignInClient;
     private Context mContext;
     private SignInButton loginBtn;
+    private Socket mSocket;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,8 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         mContext = this;
         mAuth = FirebaseAuth.getInstance();
+        ChatApplication app = (ChatApplication) getApplication();
+        mSocket = app.getSocket();
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -104,15 +114,17 @@ public class LoginActivity extends Activity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        System.out.println(acct.getIdToken());
+                        FlostRestClient.authenticateUser(mContext, acct.getIdToken());
 
-                        FlostRestClient.addUserToDB(mContext, user);
+
                         updateUI();
 
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Snackbar.make(findViewById(R.id.login_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                        mSocket.on("login", onLogin);
                     }
 
                     // ...
@@ -120,6 +132,25 @@ public class LoginActivity extends Activity {
     }
 
 
+    private Emitter.Listener onLogin = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+//            JSONObject data = (JSONObject) args[0];
+
+//            int numUsers;
+//            try {
+//                numUsers = data.getInt("numUsers");
+//            } catch (JSONException e) {
+//                return;
+//            }
+
+            Intent intent = new Intent();
+            intent.putExtra("username", mAuth.getCurrentUser().getDisplayName());
+//            intent.putExtra("numUsers", numUsers);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    };
 
 
 
