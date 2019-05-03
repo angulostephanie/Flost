@@ -1,6 +1,8 @@
 package com.specialtopics.flost.Views;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
@@ -17,6 +21,9 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
     ItemAdapter mAdapter;
     RecyclerView recyclerView;
     List<Item> mItems = Item.getTemporaryData();
+    FloatingActionButton addBtn;
+    FirebaseUser mUser;
+    Context mContext;
 
     public HomeFragmentFound() {
     }
@@ -34,11 +41,18 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        recyclerView = view.findViewById(R.id.found_recycler_view);
-        setUpRecyclerView();
+        mContext = getContext();
+
+        setUpRecyclerView(view);
+        addBtn = view.findViewById(R.id.fabAdd);
+        addBtn.setOnClickListener(v -> {
+            FlostRestClient.postItemToDB(mUser, mContext, "airpods", "fake description haha", "found",
+                    "johnson", 20.0);
+        });
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(View view) {
+        recyclerView = view.findViewById(R.id.found_recycler_view);
         mAdapter = new ItemAdapter(getActivity(), mItems);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
