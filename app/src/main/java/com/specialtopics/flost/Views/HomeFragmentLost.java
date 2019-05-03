@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class HomeFragmentLost extends android.support.v4.app.Fragment {
     public void onViewCreated(View view, Bundle sacedInstanceState){
         recyclerView = view.findViewById(R.id.lost_recycler_view);
         setUpRecyclerView();
+
+        Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
+
     }
 
     private void setUpRecyclerView() {

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 import java.util.List;
 
@@ -45,10 +46,7 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         mContext = getContext();
 
         setUpRecyclerView(view);
-        addBtn = view.findViewById(R.id.fabAdd);
-        addBtn.setOnClickListener(v -> {
-           Log.d(TAG, "adding item here");
-        });
+        Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
     }
 
     private void setUpRecyclerView(View view) {
