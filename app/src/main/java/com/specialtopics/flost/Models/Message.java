@@ -6,7 +6,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Message {
 
-    private FirebaseUser mUser;
     String mUsername;
     String mMessage;
     User mSender;
@@ -21,8 +20,7 @@ public class Message {
 //    private String mUsername;
 //
     private Message() {
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUsername = mUser.getDisplayName();
+
     }
 
 //    public int getType() {

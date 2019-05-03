@@ -118,12 +118,12 @@ public class LoginActivity extends Activity {
 
                         FlostRestClient.addUserToDB(mContext, user);
                         updateUI();
+                        mSocket.on("login", onLogin);
 
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Snackbar.make(findViewById(R.id.login_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                        mSocket.on("login", onLogin);
                     }
 
                     // ...

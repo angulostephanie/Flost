@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.R;
 
 import com.specialtopics.flost.Controllers.ChatApplication;
@@ -50,6 +53,8 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     private Socket mSocket;
     private String mUsername;
     private Boolean isConnected = true;
+    private FirebaseUser mUser;
+
 //    private Handler mTypingHandler = new Handler();
 
     public MessagesFragment(){
@@ -72,6 +77,9 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUsername = mUser.getDisplayName();
+
         setHasOptionsMenu(true);
 
 
@@ -83,6 +91,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
 
         ChatApplication app = (ChatApplication) getActivity().getApplication();
         mSocket = app.getSocket();
+        Log.i(TAG, "got socket!");
         mSocket.on(Socket.EVENT_CONNECT,onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
@@ -92,7 +101,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
 //        mSocket.on("stop typing", onStopTyping);
         mSocket.connect();
 
-        startSignIn();
+//        startSignIn();
         return inflater.inflate(R.layout.activity_message_list, container, false);
     }
 
@@ -116,6 +125,8 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Log.i(TAG, "creating view!");
 
         mMessagesView = (RecyclerView) view.findViewById(R.id.reyclerview_message_list);
         mMessagesView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -161,26 +172,28 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 attemptSend();
+                Log.i(TAG, "sent action attempted");
             }
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (Activity.RESULT_OK != resultCode) {
-            getActivity().finish();
-            return;
-        }
-
-        mUsername = data.getStringExtra("username");
-//        int numUsers = data.getIntExtra("numUsers", 1);
-
-//        addLog(getResources().getString(R.string.message_welcome));
-//        addParticipantsLog(numUsers);
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (Activity.RESULT_OK != resultCode) {
+//            getActivity().finish();
+//            return;
+//        }
+//
+//        mUsername = data.getStringExtra("username");
+////        int numUsers = data.getIntExtra("numUsers", 1);
+//
+////        addLog(getResources().getString(R.string.message_welcome));
+////        addParticipantsLog(numUsers);
+//    }
 
     private void attemptSend() {
+        Log.i(TAG, "Username: " + mUsername);
         if (null == mUsername) return;
         if (!mSocket.connected()) return;
 
@@ -193,16 +206,18 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         mInputMessageView.setText("");
         addMessage(mUsername, message);
 
+        Log.i(TAG, mUsername + " sent message: " + message);
+
         // perform the sending message attempt.
         mSocket.emit("new message", message);
     }
 
 
-    private void startSignIn() {
-        mUsername = null;
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivityForResult(intent, REQUEST_LOGIN);
-    }
+//    private void startSignIn() {
+//        mUsername = null;
+//        Intent intent = new Intent(getActivity(), LoginActivity.class);
+//        startActivityForResult(intent, REQUEST_LOGIN);
+//    }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
