@@ -2,22 +2,21 @@ package com.specialtopics.flost.Views;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +31,15 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     private Context mContext;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private FloatingActionButton addBtn;
     private List<Item> mItems = new ArrayList<>();
     private RecyclerView recyclerView;
     private ItemAdapter mAdapter;
     private View view;
     private TabLayout tabLayout;
     private FrameLayout frameLayout;
+    private ToggleButton mapToggle;
+    private Utils utils = new Utils();
+    FragmentTransaction transaction;
 
     public HomeFragment(){
 
@@ -76,18 +77,32 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         mContext = getContext();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        addBtn = view.findViewById(R.id.fabAdd);
         frameLayout = view.findViewById(R.id.result_framelayout);
 
+
         setUpTabListeners();
-        addBtn.setOnClickListener(v -> {
-            FlostRestClient.postItemToDB(mUser, mContext, "airpods", "fake description haha", "found",
-                    "johnson", 20.0);
-        });
+        setUpMapToggle();
+
     }
 
+    private void setUpMapToggle(){
+        mapToggle = view.findViewById(R.id.toggleButton);
+        mapToggle.setOnClickListener(v -> {
+            Fragment fragment;
+            if(mapToggle.isChecked()){
+                fragment = new MapsActivity();
+            } else {
+                fragment = new HomeFragmentLost();
+            }
+            transaction = getFragmentManager().beginTransaction();
+            Utils.loadFragment(fragment, R.id.frame_container, transaction);
+        });
+    }
     private void setUpTabListeners(){
         tabLayout = view.findViewById(R.id.tabLayout);
+        transaction = getFragmentManager().beginTransaction();
+        Utils.loadFragment(new HomeFragmentLost(), R.id.result_framelayout, transaction);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -101,11 +116,8 @@ public class HomeFragment extends android.support.v4.app.Fragment {
                         fragment = new HomeFragmentFound();
                         break;
                 }
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.result_framelayout, fragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                ft.commit();
+                transaction = getFragmentManager().beginTransaction();
+                Utils.loadFragment(fragment, R.id.result_framelayout, transaction);
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -117,14 +129,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
             }
         });
-    }
 
-    private void loadFragment(Fragment fragment) {
-        // load fragment
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
 
