@@ -39,6 +39,7 @@
             android:name="com.specialtopics.flost.Views.MapsActivity"
             android:label="Map">
         </activity>
+        <activity android:name="com.specialtopics.flost.Views.FormActivity"></activity>
     </application>
 
 </manifest>

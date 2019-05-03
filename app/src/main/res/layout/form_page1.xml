@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_q1"
+        style="@style/questionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QUESTION 1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="150dp">
+        
+        <Button
+            android:id="@+id/find_item_btn"
+            android:layout_width="152dp"
+            android:layout_height="133dp"
+            android:text="FIND AN ITEM"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/lost_item_btn"
+            android:layout_width="152dp"
+            android:layout_height="133dp"
+            android:text="LOSE AN ITEM"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+</LinearLayout>

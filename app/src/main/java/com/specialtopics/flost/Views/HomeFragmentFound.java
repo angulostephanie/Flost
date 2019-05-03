@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 import java.util.List;
 
@@ -44,11 +44,8 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         mContext = getContext();
 
         setUpRecyclerView(view);
-        addBtn = view.findViewById(R.id.fabAdd);
-        addBtn.setOnClickListener(v -> {
-            FlostRestClient.postItemToDB(mUser, mContext, "airpods", "fake description haha", "found",
-                    "johnson", 20.0);
-        });
+        Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
+
     }
 
     private void setUpRecyclerView(View view) {
