@@ -50,7 +50,7 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.found_recycler_view);
-        mAdapter = new ItemAdapter(getActivity(), mItems);
+        mAdapter = new ItemAdapter(getActivity(), mItems, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);

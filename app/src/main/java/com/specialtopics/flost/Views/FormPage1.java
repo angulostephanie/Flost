@@ -2,6 +2,7 @@ package com.specialtopics.flost.Views;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,9 @@ public class FormPage1 extends Fragment {
     Fragment nextFrag;
     int page;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -35,18 +34,27 @@ public class FormPage1 extends Fragment {
                              Bundle savedInstanceState) {
         newItem = getArguments().getParcelable("data");
         page = getArguments().getInt("page");
+        activity = (FormActivity) getActivity();
         View view = inflater.inflate(R.layout.form_page1, container, false);
         return view;
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d("asdf", "asdf");
+
+        if (isVisibleToUser  && activity != null) {
+            activity.hidePrevButton();
+            activity.hideNextButton();
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         nextFrag = Utils.getNextFrag(getActivity(), page);
-        activity = (FormActivity) getActivity();
         find_button = view.findViewById(R.id.find_item_btn);
         lost_button = view.findViewById(R.id.lost_item_btn);
-
-        activity.hideNextButton();
 
         find_button.setOnClickListener(createOnClickListeners());
         lost_button.setOnClickListener(createOnClickListeners());
@@ -63,14 +71,15 @@ public class FormPage1 extends Fragment {
                         focusButton(find_button, lost_button);
                         newItem.setType("found");
                         ((FormPage2) nextFrag).onFormDataReceived(newItem);
+                        activity.showNextButton();
                         break;
                     case R.id.lost_item_btn:
                         focusButton(lost_button, find_button);
                         newItem.setType("lost");
                         ((FormPage2) nextFrag).onFormDataReceived(newItem);
+                        activity.showNextButton();
                         break;
                 }
-                activity.showNextButton();
             }
         };
         return btnClickListeners;

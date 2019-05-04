@@ -18,6 +18,8 @@ public class Item implements Parcelable {
     private String userID;
     private String timeStamp;
     private boolean compensation;
+    private String inputTime;
+    private String inputDay;
 
     public Item(){
         this.itemID = "";
@@ -28,9 +30,11 @@ public class Item implements Parcelable {
         this.userID = "";
         this.timeStamp = "";
         this.compensation = false;
+        this.inputTime = "";
+        this.inputDay = "";
     };
 
-    public Item(String itemID, String name, String desc, String type, String location, String userID, boolean compensation){
+    public Item(String itemID, String name, String desc, String type, String location, String userID, boolean compensation, String inputTime, String inputDay){
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
@@ -39,6 +43,8 @@ public class Item implements Parcelable {
         this.userID = userID;
         this.timeStamp = createTimestamp();
         this.compensation = compensation;
+        this.inputTime = inputTime;
+        this.inputDay = inputDay;
     }
 
     public Item(String name, String desc, boolean compensation){
@@ -54,6 +60,8 @@ public class Item implements Parcelable {
     public void setLocation(String location) { this.location = location; }
     public void setUserID(String userID) { this.userID = userID; }
     public void setTimeSteamp(String timeSteamp) { this.timeStamp = timeSteamp; }
+    public void setInputTime(String inputTime) {this.inputTime = inputTime; }
+    public void setInputDay(String inputDay) { this.inputDay = inputDay; }
 
 
     public String getItemID() { return itemID; }
@@ -62,6 +70,8 @@ public class Item implements Parcelable {
     public String getType() { return type; }
     public String getLocation() { return location; }public String getUserID() { return userID; }
     public String getTimeSteamp() { return timeStamp; }
+    public String getInputTime() { return inputTime; }
+    public String getInputDay() { return inputDay; }
 
     //item_id - root
     //item_name

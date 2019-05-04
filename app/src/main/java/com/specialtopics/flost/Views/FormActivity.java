@@ -21,6 +21,8 @@ public class FormActivity extends AppCompatActivity  {
     ImageButton backButton;
     Button previousPageButton;
     Item newItem;
+    boolean overrideFlag;
+    int nextPage;
 
 
 
@@ -29,10 +31,12 @@ public class FormActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
         newItem = new Item();
+        overrideFlag = false;
 
         viewPager = findViewById(R.id.vpPager);
         fragmentPagerAdapter = new FormAdapter(getSupportFragmentManager(), newItem);
         viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(9);
         nextPageButton = findViewById(R.id.nextPageButton);
         previousPageButton = findViewById(R.id.previousPageButton);
@@ -58,12 +62,18 @@ public class FormActivity extends AppCompatActivity  {
 
             @Override
             public void onClick(View view) {
-                viewPager.setCurrentItem(getNextPossibleItemIndex(1));
+                if(overrideFlag){
+                    overrideFlag = false;
+                    viewPager.setCurrentItem(nextPage);
+                } else
+                    viewPager.setCurrentItem(getNextPossibleItemIndex(1));
             }
         });
 
 
     }
+
+
     public void hidePrevButton(){
         previousPageButton.setVisibility(View.INVISIBLE);
     }
@@ -78,8 +88,13 @@ public class FormActivity extends AppCompatActivity  {
         nextPageButton.setVisibility(View.VISIBLE);
     }
 
+    public void setPageOnNextClick(int page){
+        overrideFlag = true;
+        nextPage = page - 1 ;
+    }
 
     private int getNextPossibleItemIndex (int change) {
+
         int currentIndex = viewPager.getCurrentItem();
         int total = viewPager.getAdapter().getCount();
 

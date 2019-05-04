@@ -13,4 +13,10 @@
         <item>Marketplace</item>
         <item>Green Bean</item>
     </string-array>
+    <string-array name="time_array">
+        <item>Morning</item>
+        <item>Noon</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+    </string-array>
 </resources>

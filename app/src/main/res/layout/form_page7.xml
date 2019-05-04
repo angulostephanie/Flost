@@ -5,24 +5,25 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_q8"
+        android:id="@+id/tv_q7"
         style="@style/questionTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QUESTION 8" />
+        android:text="QUESTION 7" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp">
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="150dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/match_recycler_view"
+        <EditText
+            android:id="@+id/et_q7"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:clipToPadding="true"
-            android:scrollbars="vertical"
-            android:background="@color/lighterTheme"/>
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Item Name" />
 
     </RelativeLayout>
 

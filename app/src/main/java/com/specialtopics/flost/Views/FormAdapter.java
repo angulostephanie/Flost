@@ -8,9 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.specialtopics.flost.Models.Item;
 
 public class FormAdapter extends FragmentPagerAdapter {
-    private static int NUM_ITEMS = 5;
-    private static boolean lostItemStatus;
-    Fragment frag_1;
+    private static int NUM_ITEMS = 8;
     Item newItem;
 
     public FormAdapter(FragmentManager fragmentManager, Item item) {
@@ -36,9 +34,15 @@ public class FormAdapter extends FragmentPagerAdapter {
             case 2:
                 return setUpBundle(newItem, new FormPage3(), 2);
             case 3:
-                return FormPage4.newInstance(3);
+                return setUpBundle(newItem, new FormPage4(), 3);
             case 4:
-                return FormPage5.newInstance(4);
+                return setUpBundle(newItem, new FormPage5(), 4);
+            case 5:
+                return setUpBundle(newItem, new FormPage6(), 5);
+            case 6:
+                return setUpBundle(newItem, new FormPage7(), 6);
+            case 7:
+                return setUpBundle(newItem, new FormPage8(), 7);
             default:
                 return null;
         }

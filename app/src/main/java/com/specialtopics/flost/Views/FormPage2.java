@@ -23,6 +23,7 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
     Item newItem;
     Fragment nextFrag;
     int page;
+    FormActivity activity;
 
     public static FormPage2 newInstance() {
         FormPage2 fragment = new FormPage2();
@@ -45,11 +46,18 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
-        FormActivity activity = (FormActivity) getActivity();
-        activity.hideNextButton();
-        nextFrag = Utils.getNextFrag(getActivity(), page);
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
+        if (isVisibleToUser && activity != null) {
+            activity.showPrevButton();
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        nextFrag = Utils.getNextFrag(getActivity(), page);
+        activity = (FormActivity) getActivity();
 
         title = view.findViewById(R.id.tv_q2);
         title.setText(Utils.getQ2());
@@ -61,14 +69,16 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                activity.showNextButton();
-                Log.d("asdf", "2");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 input = editText.getText().toString();
-                ((FormPage3) nextFrag).onFormDataReceived(newItem);
+                if(newItem != null) {
+                    newItem.setName(input);
+                    ((FormPage3) nextFrag).onFormDataReceived(newItem);
+                }
+                activity.showNextButton();
             }
         });
 
@@ -78,5 +88,6 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
     @Override
     public void onFormDataReceived(Item item) {
         newItem = item;
+        Log.d("test", item.getType());
     }
 }

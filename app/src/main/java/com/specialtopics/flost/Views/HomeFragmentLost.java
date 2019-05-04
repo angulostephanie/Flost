@@ -43,7 +43,7 @@ public class HomeFragmentLost extends android.support.v4.app.Fragment {
     }
 
     private void setUpRecyclerView() {
-        mAdapter = new ItemAdapter(getActivity(), mItems);
+        mAdapter = new ItemAdapter(getActivity(), mItems, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);

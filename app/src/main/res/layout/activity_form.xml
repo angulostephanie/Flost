@@ -28,19 +28,24 @@
     </android.support.v4.view.ViewPager>
     <RelativeLayout
         android:id="@+id/buttons"
+        android:background="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <Button
+            style="@style/navigationButtons"
             android:id="@+id/nextPageButton"
             android:layout_width="100dp"
+            android:layout_marginRight="20dp"
             android:layout_height="wrap_content"
             android:text="NEXT"
             android:layout_alignParentEnd="true"/>
 
         <Button
+            style="@style/navigationButtons"
             android:id="@+id/previousPageButton"
             android:layout_width="100dp"
+            android:layout_marginLeft="20dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="PREVIOUS"

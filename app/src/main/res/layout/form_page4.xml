@@ -17,13 +17,18 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="150dp">
 
-        <EditText
-            android:id="@+id/et_q4"
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/spinner_day"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Item Name" />
+            android:layout_alignParentLeft="true"
+            />
+        <Spinner
+            android:id="@+id/spinner_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
 
     </RelativeLayout>
 

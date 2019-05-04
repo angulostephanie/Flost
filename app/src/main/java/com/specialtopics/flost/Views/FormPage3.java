@@ -2,6 +2,7 @@ package com.specialtopics.flost.Views;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
     Item newItem;
     int page;
     Fragment nextFrag;
+    FormActivity activity;
 
     public static FormPage3 newInstance(int page) {
         FormPage3 fragment = new FormPage3();
@@ -30,21 +32,30 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        activity = (FormActivity) getActivity();
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            activity.hideNextButton();
+        }
     }
 
     // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        page = getArguments().getInt("page");
         View view = inflater.inflate(R.layout.form_page3, container, false);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        FormActivity activity = (FormActivity) getActivity();
         title = view.findViewById(R.id.tv_q3);
         nextFrag = Utils.getNextFrag(getActivity(), page);
 
@@ -57,7 +68,11 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String chosenItem = (String) parent.getSelectedItem();
-                activity.showNextButton();
+                if(newItem!=null) {
+                    newItem.setLocation(chosenItem);
+                    ((FormPage4) nextFrag).onFormDataReceived(newItem);
+                    activity.showNextButton();
+                }
             }
 
             @Override
@@ -68,17 +83,14 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
 
     }
 
+
     @Override
     public void onFormDataReceived(Item item) {
         newItem = item;
-        if(newItem != null) {
-            verb = newItem.getType();
-            if(verb == "lost")
-                verb = "lose";
-            else
-                verb = "find";
-            title.setText(Utils.getQ3(verb));
-        }
+        verb = Utils.getVerb(newItem.getType());
+        title.setText(Utils.getQ3(verb));
+        Log.d("test", item.getName());
+
     }
 
 }
