@@ -11,7 +11,7 @@ public class Message {
     String mMessage;
     User mSender;
     long createdAt;
-
+    int id;
 //    public static final int TYPE_MESSAGE = 0;
 //    public static final int TYPE_LOG = 1;
 //    public static final int TYPE_ACTION = 2;
@@ -23,6 +23,7 @@ public class Message {
     private Message() {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUsername = mUser.getDisplayName();
+        id = this.hashCode();
     }
 
 //    public int getType() {
@@ -34,7 +35,7 @@ public class Message {
     };
 
     public String getSender() {
-        return mSender.getUserID();
+        return mSender.getEmail();
     }
 
     public long getCreatedAt() {
