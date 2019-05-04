@@ -1,9 +1,4 @@
-app/src/main/java/com/specialtopics/flost/Models/Message.javapackage com.specialtopics.flost.Models;
-
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
+package com.specialtopics.flost.Models;
 public class Message {
 
     String mUsername;
@@ -20,6 +15,7 @@ public class Message {
 //    private String mUsername;
 //
     private Message() {
+
         id = this.hashCode();
     }
 
@@ -33,6 +29,7 @@ public class Message {
 
     public String getSender() {
         return mSender.getEmail();
+
     }
     public int getID() {
         return id;
