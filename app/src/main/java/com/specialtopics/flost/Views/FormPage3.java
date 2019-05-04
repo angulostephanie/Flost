@@ -64,6 +64,7 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
                 R.array.buildings_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -80,6 +81,7 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
                 activity.hideNextButton();
             }
         });
+
 
     }
 

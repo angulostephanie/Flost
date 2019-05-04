@@ -75,16 +75,16 @@ public class Utils extends android.support.v4.app.Fragment {
     }
 
     public static String[] getRecentDays(){
-        String[] days = new String[7];
-
+        String[] days = new String[8];
+        days[0] = "Day";
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd ");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 0);
 
-        for(int i = 0; i < 7; i++){
-            if(i == 0)
+        for(int i = 1; i < 8; i++){
+            if(i == 1)
                 days[i] = "Today";
-            else if(i == 1)
+            else if(i == 2)
                 days[i] = "Yesterday";
             else
                 days[i] = sdf.format(cal.getTime());
