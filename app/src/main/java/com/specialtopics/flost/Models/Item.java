@@ -26,20 +26,19 @@ public class Item implements Parcelable {
     private boolean containsStaticImage;
     private byte[] image;
     private int staticImageID;
+    private String inputTime;
+    private String inputDay;
 
     public Item(){
-        this.itemID = "";
+        this.itemID = 0;
         this.name = "";
         this.desc = "";
         this.type = "";
         this.location = "";
-        this.userID = "";
         this.timeStamp = "";
-        this.compensation = false;
         this.inputTime = "";
         this.inputDay = "";
     };
-    public Item(){}
 
     /*
        THE NEXT TWO CONSTRUCTORS ARE USED WHEN CREATING AN ITEM
@@ -87,7 +86,6 @@ public class Item implements Parcelable {
         this.desc = desc;
         this.type = type;
         this.location = location;
-        this.compensation = compensation;
         this.inputTime = inputTime;
         this.inputDay = inputDay;
         this.email = email;
@@ -103,8 +101,8 @@ public class Item implements Parcelable {
         this.desc = desc;
         this.type = type;
         this.location = location;
-        this.email = email;
         this.timeStamp = timestamp;
+        this.email = email;
         this.image = image;
         this.containsStaticImage = false;
     }
@@ -150,17 +148,19 @@ public class Item implements Parcelable {
     }
 
   public Item(Parcel in){
-        String[] data = new String[3];
-
-        in.readStringArray(data);
-        // the order needs to be the same as in writeToParcel() method
-        this.itemID = data[0];
-        this.name = data[1];
-        this.desc = data[2];
-        this.type = data[3];
-        this.location = data[4];
-        this.userID = data[5];
-        this.timeStamp = data[6];
+      itemID = in.readInt();
+      name = in.readString();
+      desc = in.readString();
+      type = in.readString();
+      location = in.readString();
+      email = in.readString();
+      timeStamp = in.readString();
+      containsStaticImage = (boolean) in.readValue(null);
+      byte[] value = new byte[in.readInt()];
+      in.readByteArray(this.image);
+      staticImageID = in.readInt();
+      inputTime = in.readString();
+      inputDay = in.readString();
     }
     @Override
     public int describeContents() {
@@ -169,13 +169,19 @@ public class Item implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[] {this.itemID,
-                this.name,
-                this.desc,
-        this.type,
-        this.location,
-        this.userID,
-        this.timeStamp});
+        dest.writeInt(itemID);
+        dest.writeString(name);
+        dest.writeString(desc);
+        dest.writeString(type);
+        dest.writeString(location);
+        dest.writeString(email);
+        dest.writeString(timeStamp);
+        dest.writeValue(containsStaticImage);
+        dest.writeByteArray(image);
+        dest.writeInt(staticImageID);
+        dest.writeString(inputTime);
+        dest.writeString(inputDay);
+
     }
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Item createFromParcel(Parcel in) {

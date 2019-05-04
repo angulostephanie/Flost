@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,16 +47,10 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         setUpRecyclerView(view);
 
-        //Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
 
         addBtn = view.findViewById(R.id.fabAdd);
-        addBtn.setOnClickListener(v -> {
-            // testing post item func
-            Item item = new Item(mUser.getEmail(), "wallet",
-                    "it's a kate space wallet :( help!!", "lost", "marketplace", Item.createTestByteArray(mContext));
-            FlostRestClient.postItem(mContext, item);
-           Log.d(TAG, "adding item here");
-        });
+        Utils.setUpStartFormBtns(addBtn, getActivity());
+
     }
 
     private void setUpRecyclerView(View view) {
