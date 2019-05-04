@@ -6,4 +6,11 @@
     <string name="nav_messages">Messages</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_home">Home</string>
+    <string-array name="buildings_array">
+        <item>Fowler</item>
+        <item>Johnson</item>
+        <item>Academic Commons</item>
+        <item>Marketplace</item>
+        <item>Green Bean</item>
+    </string-array>
 </resources>

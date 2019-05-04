@@ -11,6 +11,7 @@ import com.specialtopics.flost.R;
 
 public class FormPage4 extends Fragment {
     TextView title;
+    String verb;
 
     public static FormPage4 newInstance(int page) {
         FormPage4 fragment = new FormPage4();
@@ -36,10 +37,7 @@ public class FormPage4 extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        FormActivity activity = (FormActivity) getActivity();
-        activity.showPrevButton();
         title = view.findViewById(R.id.tv_q4);
-        //title.setText(Utils.getQ3(verb));
-
+        //title.setText(Utils.getQ4(verb));
     }
 }

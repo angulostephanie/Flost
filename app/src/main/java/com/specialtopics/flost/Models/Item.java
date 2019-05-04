@@ -1,11 +1,14 @@
 package com.specialtopics.flost.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Item {
+public class Item implements Parcelable {
 
     private String itemID;
     private String name;
@@ -13,10 +16,19 @@ public class Item {
     private String type;
     private String location;
     private String userID;
-    private String timeSteamp;
+    private String timeStamp;
     private boolean compensation;
 
-    public Item(){};
+    public Item(){
+        this.itemID = "";
+        this.name = "";
+        this.desc = "";
+        this.type = "";
+        this.location = "";
+        this.userID = "";
+        this.timeStamp = "";
+        this.compensation = false;
+    };
 
     public Item(String itemID, String name, String desc, String type, String location, String userID, boolean compensation){
         this.itemID = itemID;
@@ -25,7 +37,7 @@ public class Item {
         this.type = type;
         this.location = location;
         this.userID = userID;
-        this.timeSteamp = createTimestamp();
+        this.timeStamp = createTimestamp();
         this.compensation = compensation;
     }
 
@@ -41,7 +53,7 @@ public class Item {
     public void setType(String type) { this.type = type; }
     public void setLocation(String location) { this.location = location; }
     public void setUserID(String userID) { this.userID = userID; }
-    public void setTimeSteamp(String timeSteamp) { this.timeSteamp = timeSteamp; }
+    public void setTimeSteamp(String timeSteamp) { this.timeStamp = timeSteamp; }
 
 
     public String getItemID() { return itemID; }
@@ -49,7 +61,7 @@ public class Item {
     public String getDesc() { return desc; }
     public String getType() { return type; }
     public String getLocation() { return location; }public String getUserID() { return userID; }
-    public String getTimeSteamp() { return timeSteamp; }
+    public String getTimeSteamp() { return timeStamp; }
 
     //item_id - root
     //item_name
@@ -76,4 +88,41 @@ public class Item {
 
         return list;
     }
+    public Item(Parcel in){
+        String[] data = new String[3];
+
+        in.readStringArray(data);
+        // the order needs to be the same as in writeToParcel() method
+        this.itemID = data[0];
+        this.name = data[1];
+        this.desc = data[2];
+        this.type = data[3];
+        this.location = data[4];
+        this.userID = data[5];
+        this.timeStamp = data[6];
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[] {this.itemID,
+                this.name,
+                this.desc,
+        this.type,
+        this.location,
+        this.userID,
+        this.timeStamp});
+    }
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 }

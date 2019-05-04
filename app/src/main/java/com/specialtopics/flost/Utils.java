@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -26,7 +27,10 @@ public class Utils extends android.support.v4.app.Fragment {
     public static String getQ7_1() { return "Do you want to set up a verification question for the owner?"; }
     public static String getQ7_2() { return "What is the verification question?"; }
 
-
+    public static Fragment getNextFrag(FragmentActivity activity, int currentPage){
+        Fragment nextFrag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vpPager + ":" + (currentPage + 1));
+        return nextFrag;
+    }
     public static void loadFragment(Fragment fragment, int frameID, FragmentTransaction transaction) {
         // load fragment
 

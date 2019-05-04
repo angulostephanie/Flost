@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 public class FormPage5 extends Fragment {
     TextView title;
@@ -36,10 +37,8 @@ public class FormPage5 extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
-        FormActivity activity = (FormActivity) getActivity();
-        activity.showPrevButton();
         title = view.findViewById(R.id.tv_q5);
-        //title.setText(Utils.getQ3(verb));
+        title.setText(Utils.getQ5());
 
     }
 }
