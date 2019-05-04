@@ -23,4 +23,31 @@
         <item name="android:textOff"></item>
     </style>
 
+    <style name="questionTitle" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif"</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">148dp</item>
+        <item name="android:layout_marginRight">80dp</item>
+        <item name="android:layout_marginLeft">80dp</item>
+    </style>
+
+    <style name="questionSubTitle" parent="AppTheme">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif"</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">148dp</item>
+    </style>
+
+    <style name="navigationButtons" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

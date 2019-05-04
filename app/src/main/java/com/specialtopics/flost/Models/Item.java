@@ -1,5 +1,8 @@
 package com.specialtopics.flost.Models;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item {
+public class Item implements Parcelable {
 
     private int itemID;
     private String name;
@@ -24,6 +27,18 @@ public class Item {
     private byte[] image;
     private int staticImageID;
 
+    public Item(){
+        this.itemID = "";
+        this.name = "";
+        this.desc = "";
+        this.type = "";
+        this.location = "";
+        this.userID = "";
+        this.timeStamp = "";
+        this.compensation = false;
+        this.inputTime = "";
+        this.inputDay = "";
+    };
     public Item(){}
 
     /*
@@ -41,6 +56,7 @@ public class Item {
         this.email = email;
         this.containsStaticImage = true;
         this.staticImageID = staticImageID;
+        
     }
 
     /*
@@ -71,6 +87,9 @@ public class Item {
         this.desc = desc;
         this.type = type;
         this.location = location;
+        this.compensation = compensation;
+        this.inputTime = inputTime;
+        this.inputDay = inputDay;
         this.email = email;
         this.timeStamp = timestamp;
         this.staticImageID = staticImageID;
@@ -99,6 +118,8 @@ public class Item {
     public void setDesc(String desc) { this.desc = desc; }
     public void setType(String type) { this.type = type; }
     public void setLocation(String location) { this.location = location; }
+    public void setInputTime(String inputTime) {this.inputTime = inputTime; }
+    public void setInputDay(String inputDay) { this.inputDay = inputDay; }
     public void setEmail(String email) { this.email = email; }
     public void setTimeStamp(String timeStamp) { this.timeStamp = timeStamp; }
     public void setImage(byte[] image) { this.image = image; }
@@ -109,6 +130,8 @@ public class Item {
     public String getName() { return name; }
     public String getDesc() { return desc; }
     public String getType() { return type; }
+    public String getInputTime() { return inputTime; }
+    public String getInputDay() { return inputDay; }
     public String getLocation() { return location; }
     public String getEmail() { return email; }
     public String getTimeStamp() { return timeStamp; }
@@ -125,6 +148,44 @@ public class Item {
 
         return list;
     }
+
+  public Item(Parcel in){
+        String[] data = new String[3];
+
+        in.readStringArray(data);
+        // the order needs to be the same as in writeToParcel() method
+        this.itemID = data[0];
+        this.name = data[1];
+        this.desc = data[2];
+        this.type = data[3];
+        this.location = data[4];
+        this.userID = data[5];
+        this.timeStamp = data[6];
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[] {this.itemID,
+                this.name,
+                this.desc,
+        this.type,
+        this.location,
+        this.userID,
+        this.timeStamp});
+    }
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 
     public String toString() {
         return itemID + ", " + email + ", " + name + ", " + desc + ", " + type + ", " + location

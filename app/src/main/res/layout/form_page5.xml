@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_q8"
+        style="@style/questionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QUESTION 8" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/match_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:clipToPadding="true"
+            android:scrollbars="vertical"
+            android:background="@color/lighterTheme"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

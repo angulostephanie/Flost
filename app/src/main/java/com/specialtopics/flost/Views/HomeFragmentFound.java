@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 import java.util.List;
 
@@ -47,6 +47,9 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         mContext = getContext();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         setUpRecyclerView(view);
+
+        //Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
+
         addBtn = view.findViewById(R.id.fabAdd);
         addBtn.setOnClickListener(v -> {
             // testing post item func
@@ -59,7 +62,7 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.found_recycler_view);
-        mAdapter = new ItemAdapter(getActivity(), mItems);
+        mAdapter = new ItemAdapter(getActivity(), mItems, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
