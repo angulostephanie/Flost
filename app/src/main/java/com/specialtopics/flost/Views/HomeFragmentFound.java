@@ -6,18 +6,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
 import java.util.List;
 
 public class HomeFragmentFound extends android.support.v4.app.Fragment {
+    final static String TAG = "HomeFragmentFound";
     ItemAdapter mAdapter;
     RecyclerView recyclerView;
     List<Item> mItems = Item.getTemporaryData();
@@ -46,8 +47,7 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         setUpRecyclerView(view);
         addBtn = view.findViewById(R.id.fabAdd);
         addBtn.setOnClickListener(v -> {
-            FlostRestClient.postItemToDB(mUser, mContext, "airpods", "fake description haha", "found",
-                    "johnson", 20.0);
+           Log.d(TAG, "adding item here");
         });
     }
 

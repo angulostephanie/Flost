@@ -3,8 +3,12 @@ public class Message {
 
     String mUsername;
     String mMessage;
+    String mReceiverEmail;
+    String mSenderEmail;
+    User mReceiver; // I don't think we should have the entire User obj, probably just having their email is fine.
     User mSender;
     long createdAt;
+    String timestamp;
     int id;
 //    public static final int TYPE_MESSAGE = 0;
 //    public static final int TYPE_LOG = 1;
@@ -15,8 +19,17 @@ public class Message {
 //    private String mUsername;
 //
     private Message() {
-
         id = this.hashCode();
+    }
+
+    // This constructor is needed for when the REST client fetches messages
+    public Message(int id, String receiverEmail, String senderEmail, String messageContent, String timestamp) {
+        this.id = id;
+        this.mReceiverEmail = receiverEmail;
+        this.mSenderEmail = senderEmail;
+        this.mMessage = messageContent;
+        this.timestamp = timestamp;
+
     }
 
 //    public int getType() {
@@ -25,12 +38,17 @@ public class Message {
 
     public String getMessage() {
         return mMessage;
-    };
+    }
 
     public String getSender() {
-        return mSender.getEmail();
+        return mSenderEmail;
 
     }
+
+    public String getReceiver() {
+        return mReceiverEmail;
+    }
+
     public int getID() {
         return id;
     }
