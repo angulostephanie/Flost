@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.specialtopics.flost.R;
 
@@ -11,7 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Item {
+public class Item implements Parcelable {
 
     private int itemID;
     private String name;
@@ -23,8 +25,19 @@ public class Item {
     private boolean containsStaticImage;
     private byte[] image;
     private int staticImageID;
+    private String inputTime;
+    private String inputDay;
 
-    public Item(){}
+    public Item(){
+        this.itemID = 0;
+        this.name = "";
+        this.desc = "";
+        this.type = "";
+        this.location = "";
+        this.timeStamp = "";
+        this.inputTime = "";
+        this.inputDay = "";
+    }
 
     /*
        THE NEXT TWO CONSTRUCTORS ARE USED WHEN CREATING AN ITEM
@@ -71,6 +84,8 @@ public class Item {
         this.desc = desc;
         this.type = type;
         this.location = location;
+        this.inputTime = inputTime;
+        this.inputDay = inputDay;
         this.email = email;
         this.timeStamp = timestamp;
         this.staticImageID = staticImageID;
@@ -84,8 +99,8 @@ public class Item {
         this.desc = desc;
         this.type = type;
         this.location = location;
-        this.email = email;
         this.timeStamp = timestamp;
+        this.email = email;
         this.image = image;
         this.containsStaticImage = false;
     }
@@ -125,6 +140,54 @@ public class Item {
 
         return list;
     }
+
+    public Item(Parcel in){
+      itemID = in.readInt();
+      name = in.readString();
+      desc = in.readString();
+      type = in.readString();
+      location = in.readString();
+      email = in.readString();
+      timeStamp = in.readString();
+      containsStaticImage = (boolean) in.readValue(null);
+      byte[] value = new byte[in.readInt()];
+      in.readByteArray(this.image);
+      staticImageID = in.readInt();
+      inputTime = in.readString();
+      inputDay = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(itemID);
+        dest.writeString(name);
+        dest.writeString(desc);
+        dest.writeString(type);
+        dest.writeString(location);
+        dest.writeString(email);
+        dest.writeString(timeStamp);
+        dest.writeValue(containsStaticImage);
+        dest.writeByteArray(image);
+        dest.writeInt(staticImageID);
+        dest.writeString(inputTime);
+        dest.writeString(inputDay);
+
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 
     public String toString() {
         return itemID + ", " + email + ", " + name + ", " + desc + ", " + type + ", " + location

@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Controllers.FlostRestClient;
+import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.Views.FormActivity;
 
 
@@ -48,8 +49,9 @@ public class Utils extends android.support.v4.app.Fragment {
 
     public static void setUpAddItemBtns(FloatingActionButton addBtn, FirebaseUser mUser, Context mContext){
         addBtn.setOnClickListener(v -> {
-            FlostRestClient.postItemToDB(mUser, mContext, "airpods", "fake description haha", "found",
-                    "johnson", 20.0);
+            Item item = new Item(mUser.getEmail(), "wallet",
+                    "it's a kate space wallet :( help!!", "lost", "marketplace", Item.createTestByteArray(mContext));
+            FlostRestClient.postItem(mContext, item);
         });
     }
 }
