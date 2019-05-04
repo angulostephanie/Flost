@@ -1,5 +1,13 @@
 package com.specialtopics.flost.Models;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
+import com.specialtopics.flost.R;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,26 +20,52 @@ public class Item {
     private String location;
     private String email;
     private String timeStamp;
-    private double compensation;
+    private boolean containsStaticImage;
+    private byte[] image;
+    private int staticImageID;
 
     public Item(){}
 
-    // when adding an item, timestamp and item id are generated for you
-    // timestamps are generated on the server
+    /*
+       THE NEXT TWO CONSTRUCTORS ARE USED WHEN CREATING AN ITEM
+        This constructor is used when the item is mapped to a static image.
+     */
+
     public Item(String email, String name, String desc, String type,
-                String location, double compensation) {
+                String location, int staticImageID) {
         this.itemID = this.hashCode(); // based on the objects address in mem
         this.name = name;
         this.desc = desc;
         this.type = type;
         this.location = location;
         this.email = email;
-        this.compensation = compensation;
+        this.containsStaticImage = true;
+        this.staticImageID = staticImageID;
     }
 
-    // when fetching the time, you would provide the timestamp/item id given from the db
+    /*
+        This constructor is used when the user uploads their own photo
+     */
+
+    public Item(String email, String name, String desc, String type,
+                String location, byte[] image) {
+        this.itemID = this.hashCode(); // based on the objects address in mem
+        this.name = name;
+        this.desc = desc;
+        this.type = type;
+        this.location = location;
+        this.email = email;
+        this.containsStaticImage = false;
+        this.image = image;
+    }
+
+    /*
+        THE NEXT TWO CONSTRUCTORS ARE USED WHEN FETCHING ITEMS FROM DB
+        When fetching the item, you would provide the timestamp/item id given from the db
+     */
+
     public Item(int itemID, String email, String name, String desc, String type,
-                String location, String timestamp, double compensation) {
+                String location, String timestamp, int staticImageID) {
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
@@ -39,13 +73,26 @@ public class Item {
         this.location = location;
         this.email = email;
         this.timeStamp = timestamp;
-        this.compensation = compensation;
+        this.staticImageID = staticImageID;
+        this.containsStaticImage = true;
     }
 
-    public Item(String name, String desc, double compensation) {
+    public Item(int itemID, String email, String name, String desc, String type,
+                String location, String timestamp, byte[] image) {
+        this.itemID = itemID;
         this.name = name;
         this.desc = desc;
-        this.compensation = compensation;
+        this.type = type;
+        this.location = location;
+        this.email = email;
+        this.timeStamp = timestamp;
+        this.image = image;
+        this.containsStaticImage = false;
+    }
+
+    public Item(String name, String desc) {
+        this.name = name;
+        this.desc = desc;
     }
 
     public void setName(String name) { this.name = name; }
@@ -54,7 +101,9 @@ public class Item {
     public void setLocation(String location) { this.location = location; }
     public void setEmail(String email) { this.email = email; }
     public void setTimeStamp(String timeStamp) { this.timeStamp = timeStamp; }
-    public void setReward(double compensation) { this.compensation = compensation; }
+    public void setImage(byte[] image) { this.image = image; }
+    public void setStaticImageID(int staticImageID) { this.staticImageID = staticImageID; }
+
 
     public int getItemID() { return itemID; }
     public String getName() { return name; }
@@ -63,20 +112,32 @@ public class Item {
     public String getLocation() { return location; }
     public String getEmail() { return email; }
     public String getTimeStamp() { return timeStamp; }
-    public double getReward() { return compensation; }
+    public byte[] getImage() { return image; }
+    public int getStaticImageID() { return staticImageID; }
+    public boolean containsStaticImage() { return containsStaticImage; }
 
     public static List<Item> getTemporaryData(){
         List<Item> list = new ArrayList<>();
 
-        list.add(new Item("Red Hydroflask", "Please find it!", 20.0));
-        list.add(new Item("Pencil Case", "", 0));
-        list.add(new Item("Yellow Hydroflask", "", 15.0));
+        list.add(new Item("Red Hydroflask", "Please find it!"));
+        list.add(new Item("Pencil Case", ""));
+        list.add(new Item("Yellow Hydroflask", ""));
 
         return list;
     }
 
     public String toString() {
         return itemID + ", " + email + ", " + name + ", " + desc + ", " + type + ", " + location
-                + ", " + timeStamp +  ", "  + compensation;
+                + ", " + timeStamp + ", " + staticImageID;
+    }
+
+    public static byte[] createTestByteArray(Context mContext) {
+        Drawable d = mContext.getDrawable(R.drawable.bottle);
+        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+
+        byte[] bitmapdata = stream.toByteArray();
+        return bitmapdata;
     }
 }

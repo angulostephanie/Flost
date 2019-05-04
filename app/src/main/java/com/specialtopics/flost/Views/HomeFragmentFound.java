@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
@@ -43,10 +45,14 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         mContext = getContext();
-
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         setUpRecyclerView(view);
         addBtn = view.findViewById(R.id.fabAdd);
         addBtn.setOnClickListener(v -> {
+            // testing post item func
+            Item item = new Item(mUser.getEmail(), "wallet",
+                    "it's a kate space wallet :( help!!", "lost", "marketplace", Item.createTestByteArray(mContext));
+            FlostRestClient.postItem(mContext, item);
            Log.d(TAG, "adding item here");
         });
     }
