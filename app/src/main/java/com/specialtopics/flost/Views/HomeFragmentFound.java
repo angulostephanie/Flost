@@ -6,10 +6,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
@@ -18,6 +20,7 @@ import com.specialtopics.flost.Utils;
 import java.util.List;
 
 public class HomeFragmentFound extends android.support.v4.app.Fragment {
+    final static String TAG = "HomeFragmentFound";
     ItemAdapter mAdapter;
     RecyclerView recyclerView;
     List<Item> mItems = Item.getTemporaryData();
@@ -42,10 +45,19 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         mContext = getContext();
-
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         setUpRecyclerView(view);
-        Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
 
+        //Utils.setUpStartFormBtns(view.findViewById(R.id.fabAdd), getActivity());
+
+        addBtn = view.findViewById(R.id.fabAdd);
+        addBtn.setOnClickListener(v -> {
+            // testing post item func
+            Item item = new Item(mUser.getEmail(), "wallet",
+                    "it's a kate space wallet :( help!!", "lost", "marketplace", Item.createTestByteArray(mContext));
+            FlostRestClient.postItem(mContext, item);
+           Log.d(TAG, "adding item here");
+        });
     }
 
     private void setUpRecyclerView(View view) {

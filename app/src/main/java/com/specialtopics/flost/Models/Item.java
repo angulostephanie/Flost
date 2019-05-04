@@ -1,25 +1,31 @@
 package com.specialtopics.flost.Models;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
+import com.specialtopics.flost.R;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class Item implements Parcelable {
 
-    private String itemID;
+    private int itemID;
     private String name;
     private String desc;
     private String type;
     private String location;
-    private String userID;
+    private String email;
     private String timeStamp;
-    private boolean compensation;
-    private String inputTime;
-    private String inputDay;
+    private boolean containsStaticImage;
+    private byte[] image;
+    private int staticImageID;
 
     public Item(){
         this.itemID = "";
@@ -33,72 +39,117 @@ public class Item implements Parcelable {
         this.inputTime = "";
         this.inputDay = "";
     };
+    public Item(){}
 
-    public Item(String itemID, String name, String desc, String type, String location, String userID, boolean compensation, String inputTime, String inputDay){
+    /*
+       THE NEXT TWO CONSTRUCTORS ARE USED WHEN CREATING AN ITEM
+        This constructor is used when the item is mapped to a static image.
+     */
+
+    public Item(String email, String name, String desc, String type,
+                String location, int staticImageID) {
+        this.itemID = this.hashCode(); // based on the objects address in mem
+        this.name = name;
+        this.desc = desc;
+        this.type = type;
+        this.location = location;
+        this.email = email;
+        this.containsStaticImage = true;
+        this.staticImageID = staticImageID;
+        
+    }
+
+    /*
+        This constructor is used when the user uploads their own photo
+     */
+
+    public Item(String email, String name, String desc, String type,
+                String location, byte[] image) {
+        this.itemID = this.hashCode(); // based on the objects address in mem
+        this.name = name;
+        this.desc = desc;
+        this.type = type;
+        this.location = location;
+        this.email = email;
+        this.containsStaticImage = false;
+        this.image = image;
+    }
+
+    /*
+        THE NEXT TWO CONSTRUCTORS ARE USED WHEN FETCHING ITEMS FROM DB
+        When fetching the item, you would provide the timestamp/item id given from the db
+     */
+
+    public Item(int itemID, String email, String name, String desc, String type,
+                String location, String timestamp, int staticImageID) {
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
         this.type = type;
         this.location = location;
-        this.userID = userID;
-        this.timeStamp = createTimestamp();
         this.compensation = compensation;
         this.inputTime = inputTime;
         this.inputDay = inputDay;
+        this.email = email;
+        this.timeStamp = timestamp;
+        this.staticImageID = staticImageID;
+        this.containsStaticImage = true;
     }
 
-    public Item(String name, String desc, boolean compensation){
+    public Item(int itemID, String email, String name, String desc, String type,
+                String location, String timestamp, byte[] image) {
+        this.itemID = itemID;
         this.name = name;
         this.desc = desc;
-        this.compensation = compensation;
+        this.type = type;
+        this.location = location;
+        this.email = email;
+        this.timeStamp = timestamp;
+        this.image = image;
+        this.containsStaticImage = false;
     }
 
-    public void setItemID(String itemID) { this.itemID = itemID; }
+    public Item(String name, String desc) {
+        this.name = name;
+        this.desc = desc;
+    }
+
     public void setName(String name) { this.name = name; }
     public void setDesc(String desc) { this.desc = desc; }
     public void setType(String type) { this.type = type; }
     public void setLocation(String location) { this.location = location; }
-    public void setUserID(String userID) { this.userID = userID; }
-    public void setTimeSteamp(String timeSteamp) { this.timeStamp = timeSteamp; }
     public void setInputTime(String inputTime) {this.inputTime = inputTime; }
     public void setInputDay(String inputDay) { this.inputDay = inputDay; }
+    public void setEmail(String email) { this.email = email; }
+    public void setTimeStamp(String timeStamp) { this.timeStamp = timeStamp; }
+    public void setImage(byte[] image) { this.image = image; }
+    public void setStaticImageID(int staticImageID) { this.staticImageID = staticImageID; }
 
 
-    public String getItemID() { return itemID; }
+    public int getItemID() { return itemID; }
     public String getName() { return name; }
     public String getDesc() { return desc; }
     public String getType() { return type; }
-    public String getLocation() { return location; }public String getUserID() { return userID; }
-    public String getTimeSteamp() { return timeStamp; }
     public String getInputTime() { return inputTime; }
     public String getInputDay() { return inputDay; }
-
-    //item_id - root
-    //item_name
-    //item_desc
-    //item_type
-    //item_reward
-    //item_location
-    //user_id
-    //timestamp
-
-    public String createTimestamp() {
-        Calendar calendar = Calendar.getInstance();
-        Date now = calendar.getTime();
-        String timestamp = now.toString();
-        return timestamp;
-    }
+    public String getLocation() { return location; }
+    public String getEmail() { return email; }
+    public String getTimeStamp() { return timeStamp; }
+    public byte[] getImage() { return image; }
+    public int getStaticImageID() { return staticImageID; }
+    public boolean containsStaticImage() { return containsStaticImage; }
 
     public static List<Item> getTemporaryData(){
         List<Item> list = new ArrayList<>();
 
-        list.add(new Item("Red Hydroflask", "Please find it!", true));
-        list.add(new Item("Pencil Case", "", false));
-        list.add(new Item("Yellow Hydroflask", "", true));
+        list.add(new Item("Red Hydroflask", "Please find it!"));
+        list.add(new Item("Pencil Case", ""));
+        list.add(new Item("Yellow Hydroflask", ""));
 
         return list;
     }
-    public Item(Parcel in){
+
+  public Item(Parcel in){
         String[] data = new String[3];
 
         in.readStringArray(data);
@@ -135,4 +186,19 @@ public class Item implements Parcelable {
             return new Item[size];
         }
     };
+
+    public String toString() {
+        return itemID + ", " + email + ", " + name + ", " + desc + ", " + type + ", " + location
+                + ", " + timeStamp + ", " + staticImageID;
+    }
+
+    public static byte[] createTestByteArray(Context mContext) {
+        Drawable d = mContext.getDrawable(R.drawable.bottle);
+        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+
+        byte[] bitmapdata = stream.toByteArray();
+        return bitmapdata;
+    }
 }
