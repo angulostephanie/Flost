@@ -33,6 +33,9 @@ captures/
 .navigation
 /local.properties
 
+# Google Services file
+app/google-services.json
+
 #NDK
 obj/
 .externalNativeBuild

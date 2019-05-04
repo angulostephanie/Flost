@@ -78,29 +78,11 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         frameLayout = view.findViewById(R.id.result_framelayout);
-
-
+        
         setUpTabListeners();
 
         setUpMapToggle();
 
-
-        /*
-        Log.d(TAG, mUser.getEmail());
-        List<Item> items = FlostRestClient.getItems(mContext, "");
-        Log.d(TAG, items.toString());
-        addBtn.setOnClickListener(v -> {
-
-
-//            File file = new File(imageFilenames[i]);
-//            InputStream itemImage = new FileInputStream(file);
-
-            Item item = new Item(mUser.getEmail(), "spoon from marketplace",
-                    "the marketplace has no more god dang spoons", "found",
-                    "johnson", 10000);
-            FlostRestClient.postItemToDB(mContext, item);
-        });
-        */
     }
 
     private void setUpMapToggle(){
