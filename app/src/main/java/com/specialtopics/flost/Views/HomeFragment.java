@@ -84,6 +84,7 @@ public class HomeFragment extends android.support.v4.app.Fragment {
 
         setUpMapToggle();
 
+
         /*
         Log.d(TAG, mUser.getEmail());
         List<Item> items = FlostRestClient.getItems(mContext, "");

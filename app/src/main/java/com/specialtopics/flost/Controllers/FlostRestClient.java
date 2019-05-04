@@ -1,8 +1,16 @@
 package com.specialtopics.flost.Controllers;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.specialtopics.flost.Models.Item;
@@ -21,9 +29,10 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class FlostRestClient {
     private final static String TAG = "FlostRestClient";
-    private final static String MAIN_URL =  "http://52.52.100.133:80"; //"http://10.0.2.2:8080";
+    private final static String MAIN_URL =  "http://10.0.2.2:8080"; // "http://52.52.100.133:80"; // "http://10.0.2.2:8080";
     private final static AsyncHttpClient client = new AsyncHttpClient();
-
+    private static final String GS_BUCKET = "gs://flostapp-1556168232146.appspot.com/";
+    private static FirebaseStorage firebaseStorage = FirebaseStorage.getInstance(GS_BUCKET);
 
 
     public FlostRestClient() { }
@@ -67,16 +76,15 @@ public class FlostRestClient {
                         for(int i = 0; i < array.length(); i++) {
                             try {
                                 JSONObject obj = array.getJSONObject(i);
-                                Item item = new Item(obj.getInt("item_id"),
-                                        obj.getString("email"),
-                                        obj.getString("item_name"),
-                                        obj.getString("item_desc"),
-                                        obj.getString("item_type"),
-                                        obj.getString("item_location"),
-                                        obj.getString("item_timestamp"),
-                                        obj.getDouble("item_reward"));
-                                items.add(item);
-                                Log.d(TAG, item.toString());
+//                                Item item = new Item(obj.getInt("item_id"),
+//                                        obj.getString("email"),
+//                                        obj.getString("item_name"),
+//                                        obj.getString("item_desc"),
+//                                        obj.getString("item_type"),
+//                                        obj.getString("item_location"),
+//                                        obj.getString("item_timestamp"));
+//                                items.add(item);
+                               // Log.d(TAG, item.toString());
                             } catch(JSONException e) {
                                 e.printStackTrace();
                             }
@@ -111,17 +119,23 @@ public class FlostRestClient {
         String url = MAIN_URL + "/postItem";
         JSONObject jsonParams = new JSONObject();
 
-
         try {
-            jsonParams.put("item_id", item.getItemID()); // int
+            jsonParams.put("item_id", item.getItemID());
             jsonParams.put("email",item.getEmail());
+            /*
+            TODO: update date ("item_date") and time (("item_time")) parameters please
+             */
+            jsonParams.put("item_date", "test");
+            jsonParams.put("item_time", "test");
             jsonParams.put("item_name", item.getName());
             jsonParams.put("item_desc", item.getDesc());
             jsonParams.put("item_type", item.getType());
             jsonParams.put("item_location", item.getLocation());
-            jsonParams.put("item_reward", item.getReward()); // double
 
-            Log.d(TAG, "helloooooooo!");
+            if(item.containsStaticImage())  jsonParams.put("static_image_id", item.getStaticImageID());
+
+
+
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
                 client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
@@ -129,6 +143,7 @@ public class FlostRestClient {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         Log.d(TAG, "Adding this item to mysql :)!");
+                        if(!item.containsStaticImage()) postItemImage(mContext, item.getImage(), item.getItemID());
                     }
 
                     @Override
@@ -254,4 +269,31 @@ public class FlostRestClient {
         return messages;
     }
 
+    private static void postItemImage(Context mContext, byte[] image, int key) {
+
+        StorageReference ref = firebaseStorage.getReference().child("images/"+ key);
+        ref.putBytes(image)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(mContext, "Item was upload successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(mContext, "Item image was not uploaded successfully :/ "
+                                + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                .getTotalByteCount());
+                        Log.d("Progress", String.valueOf(progress));
+                    }
+                });
+    }
 }

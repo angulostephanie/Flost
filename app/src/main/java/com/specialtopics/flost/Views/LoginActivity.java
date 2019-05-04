@@ -1,11 +1,13 @@
 package com.specialtopics.flost.Views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -118,6 +120,9 @@ public class LoginActivity extends Activity {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
 
+                        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+                        progressDialog.setTitle("Authenticating...");
+                        progressDialog.show();
                         FlostRestClient.authenticateUser(mContext, acct.getIdToken(), new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -134,6 +139,7 @@ public class LoginActivity extends Activity {
                                     e.printStackTrace();
                                 }
                                 Log.d(TAG, "Updating the UI now :)");
+                                progressDialog.dismiss();
                                 updateUI();
                             }
 
@@ -142,12 +148,16 @@ public class LoginActivity extends Activity {
                                 super.onFailure(statusCode, headers, throwable, errorResponse);
                                 if(errorResponse != null) Log.d(TAG, errorResponse.toString());
                                 Log.d(TAG, "faileddddd!");
+                                progressDialog.dismiss();
+                                Toast.makeText(mContext, "Failed at authenticating :/ ", Toast.LENGTH_SHORT).show();
                                 // TODO: add a toast or snack bar please
                             }
 
                             @Override
                             public void onProgress(long bytesWritten, long totalSize) {
                                 // TODO: add a progress bar animation here! :)
+                                double progress = (100.0*bytesWritten)/totalSize;
+                                Log.d("Progress", String.valueOf(progress));
                             }
                         });
 
