@@ -21,39 +21,23 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class FlostRestClient {
     private final static String TAG = "FlostRestClient";
-    private final static String MAIN_URL = "http://10.0.2.2:8080"; //
+    private final static String MAIN_URL =  "http://52.52.100.133:80"; //"http://10.0.2.2:8080";
     private final static AsyncHttpClient client = new AsyncHttpClient();
+
+
 
     public FlostRestClient() { }
 
-    public static void authenticateUser(Context mContext, String token) {
+    public static void authenticateUser(Context mContext, String token, JsonHttpResponseHandler jsonHttpResponseHandler) {
         String url = MAIN_URL + "/authenticateUser";
         JSONObject jsonParams = new JSONObject();
 
         try {
             jsonParams.put("token", token);
+            Log.d(TAG, token);
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        super.onSuccess(statusCode, headers, response);
-                        Log.d(TAG, "Adding this user to the mysql :)!");
-                        // move update ui function here
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d(TAG, "faileddddd!");
-                    }
-
-                    @Override
-                    public void onProgress(long bytesWritten, long totalSize) {
-                        super.onProgress(bytesWritten, totalSize);
-                        // add a progress bar animation here! :)
-                    }
-                });
+                client.post(mContext, url, entity, "application/json", jsonHttpResponseHandler);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -209,7 +193,7 @@ public class FlostRestClient {
         }
 
     }
-    
+
     public static List<Message> getMessages(Context mContext, String senderEmail, String receiverEmail) {
         String url = MAIN_URL + "/getMessages";
         JSONObject jsonParams = new JSONObject();

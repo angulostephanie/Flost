@@ -4,17 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String userID, email, first, last;
+    private String email, first, last, photoURL;
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String userID, String email, String first, String last) {
+    public User(String email, String first, String last, String photoURL) {
         this.first = first;
         this.last = last;
         this.email = email;
-        this.userID = userID;
+        this.photoURL = photoURL;
+    }
+    public User(String email, String first, String last) {
+        this.first = first;
+        this.last = last;
+        this.email = email;
     }
 
     public void setFirst(String first) {
@@ -26,8 +31,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public String getFirst() {
@@ -39,8 +44,8 @@ public class User {
     public String getEmail() {
         return email;
     }
-    public String getUserID() {
-        return userID;
+    public String getPhotoURL() {
+        return photoURL;
     }
 
     public Map<String, Object> toMap() {
@@ -48,11 +53,11 @@ public class User {
         result.put("first", first);
         result.put("last", last);
         result.put("email", email);
-        result.put("userID", userID);
+        result.put("photoURL", photoURL);
         return result;
     }
 
-    //user_id
+    //photoURL
     //user_first_name
     //user_last_name
     //email
