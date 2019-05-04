@@ -1,4 +1,4 @@
-app/src/main/java/com/specialtopics/flost/Models/User.javapackage com.specialtopics.flost.Views;
+package com.specialtopics.flost.Views;
 
 import android.app.Activity;
 import android.content.Context;
