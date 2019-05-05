@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_q6"
+        style="@style/questionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="QUESTION 6" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="150dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:background="@color/white"
+            android:id="@+id/skip_btn"
+            android:text="Skip" />
+
+        <EditText
+            android:id="@+id/et_q6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Item Name" />
+
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

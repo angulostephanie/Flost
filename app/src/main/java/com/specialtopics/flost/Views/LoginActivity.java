@@ -1,11 +1,13 @@
 package com.specialtopics.flost.Views;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -58,7 +60,9 @@ public class LoginActivity extends Activity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         loginBtn = findViewById(R.id.loginBtn);
 
         loginBtn.setOnClickListener(v -> {
@@ -72,7 +76,7 @@ public class LoginActivity extends Activity {
     public void onStart() {
         super.onStart();
         // Update UI accordingly based on if user is already signed in (non-null)
-        updateUI();
+        // updateUI();
     }
 
     @Override
@@ -112,12 +116,15 @@ public class LoginActivity extends Activity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setTitle("Authenticating...");
+        progressDialog.show();
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-
+                        Log.d(TAG, "token: " + acct.getIdToken());
                         FlostRestClient.authenticateUser(mContext, acct.getIdToken(), new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -134,6 +141,7 @@ public class LoginActivity extends Activity {
                                     e.printStackTrace();
                                 }
                                 Log.d(TAG, "Updating the UI now :)");
+                                progressDialog.dismiss();
                                 updateUI();
                             }
 
@@ -142,12 +150,16 @@ public class LoginActivity extends Activity {
                                 super.onFailure(statusCode, headers, throwable, errorResponse);
                                 if(errorResponse != null) Log.d(TAG, errorResponse.toString());
                                 Log.d(TAG, "faileddddd!");
+                                progressDialog.dismiss();
+                                Toast.makeText(mContext, "Failed at authenticating :/ ", Toast.LENGTH_SHORT).show();
                                 // TODO: add a toast or snack bar please
                             }
 
                             @Override
                             public void onProgress(long bytesWritten, long totalSize) {
                                 // TODO: add a progress bar animation here! :)
+                                double progress = (100.0*bytesWritten)/totalSize;
+                                Log.d("Progress", String.valueOf(progress));
                             }
                         });
 
@@ -156,6 +168,7 @@ public class LoginActivity extends Activity {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        progressDialog.dismiss();
                         Snackbar.make(findViewById(R.id.login_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                     }
 
@@ -183,45 +196,5 @@ public class LoginActivity extends Activity {
             finish();
         }
     };
-
-
-
-
-        /*
-        String uid = user.getUid();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userNameRef = rootRef.child("users").child(uid);
-
-        userNameRef.addListenerForSingleValueEvent( new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()) {
-                    //create new user
-                    Log.d(TAG, "Adding this user to the database :)!");
-                    String first = "";
-                    if(user.getDisplayName() != null) {
-                        first = user.getDisplayName().split(" ")[0];
-                    }
-
-                    String email = user.getEmail();
-                    String uid = user.getUid();
-
-                    User dbUser = new User(uid, email, first);
-                    Map<String, Object> userValues = dbUser.toMap();
-
-                    // this line adds the user to the db's json tree
-                    userNameRef.updateChildren(userValues);
-
-                } else {
-                    Log.d(TAG, "User already exists!");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage()); //Don't ignore errors!
-            }
-        });
-    */
 
 }

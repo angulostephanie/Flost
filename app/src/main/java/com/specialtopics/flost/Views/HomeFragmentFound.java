@@ -6,14 +6,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
+import com.specialtopics.flost.Utils;
 
 import java.util.List;
 
@@ -43,17 +44,16 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         mContext = getContext();
-
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         setUpRecyclerView(view);
-        addBtn = view.findViewById(R.id.fabAdd);
-        addBtn.setOnClickListener(v -> {
-           Log.d(TAG, "adding item here");
-        });
+
+        addBtn = view.findViewById(R.id.fabAddFound);
+        Utils.setUpStartFormBtns(addBtn, getActivity());
     }
 
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.found_recycler_view);
-        mAdapter = new ItemAdapter(getActivity(), mItems);
+        mAdapter = new ItemAdapter(getActivity(), mItems, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);

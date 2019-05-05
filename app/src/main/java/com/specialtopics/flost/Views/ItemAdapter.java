@@ -18,14 +18,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     private Context context;
     private List<Item> mItemsList;
+    private boolean matchFlag; // flags true if adapter is used for the match view (formpage8)
 
-    public ItemAdapter(Context context, List<Item> itemList){
+    public ItemAdapter(Context context, List<Item> itemList, boolean match){
         this.context = context;
         this.mItemsList = itemList;
+        this.matchFlag = match;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name, description, user, location, price, type;
+        TextView name, description, user, location, price, type, match;
         ImageView thumbnail;
 
 
@@ -37,6 +39,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             //type = view.findViewById(R.id.itemCategory);
             //user = view.findViewById(R.id.userSellingItem);
             thumbnail = view.findViewById(R.id.item_img);
+            match = view.findViewById(R.id.tv_match);
             //location = view.findViewById(R.id.itemLocation);
         }
 
@@ -56,6 +59,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         Item item = mItemsList.get(position);
         holder.name.setText(item.getName());
         holder.thumbnail.setImageResource(R.drawable.bottle);
+        if(matchFlag)
+            holder.match.setText("MATCH: "); //TODO: create util function that finds match percentage
         //holder.type.setText(item.getType());
         //holder.user.setText(item.getUserID());
     }

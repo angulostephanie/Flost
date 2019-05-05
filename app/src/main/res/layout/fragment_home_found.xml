@@ -17,7 +17,7 @@
 
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAdd"
+            android:id="@+id/fabAddFound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

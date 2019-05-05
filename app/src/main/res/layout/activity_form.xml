@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/lightGray">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/icon_back"/>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpPager"
+        android:layout_width="match_parent"
+        android:layout_height="540dp"
+        android:layout_below="@id/buttons">
+
+    </android.support.v4.view.ViewPager>
+    <RelativeLayout
+        android:id="@+id/buttons"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/nextPageButton"
+            android:layout_width="100dp"
+            style="@style/navigationButtons"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:text="NEXT"
+            android:layout_alignParentEnd="true"/>
+
+        <Button
+            android:id="@+id/previousPageButton"
+            android:layout_width="100dp"
+            style="@style/navigationButtons"
+            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="PREVIOUS"
+            android:layout_alignParentStart="true"/>
+    </RelativeLayout>
+</LinearLayout>
