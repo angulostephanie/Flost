@@ -66,7 +66,17 @@ public class Utils extends android.support.v4.app.Fragment {
                     "marketplace", Item.createTestByteArray(activity));
 
             FlostRestClient.postItem(activity, item);
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            Item item = new Item(user.getEmail(), "headphones",
+                    "gray bose wireless headphones!!", "found",
+                    "marketplace", Item.createTestByteArray(activity));
+            Log.d(TAG, "gonna delete this item ;o");
+            FlostRestClient.deleteItem(activity, item);
             */
+
+
+
             Intent mIntent = new Intent(activity, FormActivity.class);
             activity.startActivity(mIntent);
         });
