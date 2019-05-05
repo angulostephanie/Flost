@@ -72,6 +72,7 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
             @Override
             public void onClick(View v) {
                 FlostRestClient.postItem(getContext(),newItem);
+                newItem.setItemID(newItem.createHashCode());
                 Log.d("test", "Finsh btn clicked");
                 Intent  intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
