@@ -7,11 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.specialtopics.flost.Controllers.FlostRestClient;
-import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.Views.FormActivity;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +17,7 @@ import java.util.Calendar;
 
 
 public class Utils extends android.support.v4.app.Fragment {
+    private static final String TAG = "Utils";
     public void Utils(){}
 
     public static String getQ1(){ return "Did you..."; }
@@ -58,20 +57,23 @@ public class Utils extends android.support.v4.app.Fragment {
     }
 
     public static void setUpStartFormBtns(FloatingActionButton addBtn, Activity activity){
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent mIntent = new Intent(activity, FormActivity.class);
-                activity.startActivity(mIntent);
-            }
+        addBtn.setOnClickListener(v -> {
+            /*
+            steph is just testing stuff here
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            Item item = new Item(user.getEmail(), "iphone x",
+                    "rose gold, cracked screen, :///", "lost",
+                    "marketplace", Item.createTestByteArray(activity));
+
+            FlostRestClient.postItem(activity, item);
+            */
+            Intent mIntent = new Intent(activity, FormActivity.class);
+            activity.startActivity(mIntent);
         });
     }
 
     public static void setUpAddItemBtns(FloatingActionButton addBtn, FirebaseUser mUser, Context mContext){
-        addBtn.setOnClickListener(v -> {
-            Item item = new Item(mUser.getEmail(), "wallet",
-                    "it's a kate space wallet :( help!!", "lost", "marketplace", Item.createTestByteArray(mContext));
-            FlostRestClient.postItem(mContext, item);
-        });
+        addBtn.setOnClickListener(v -> { Log.d(TAG, "what");});
     }
 
     public static String[] getRecentDays(){

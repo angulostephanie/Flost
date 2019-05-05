@@ -1,18 +1,19 @@
 package com.specialtopics.flost.Models;
 
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.specialtopics.flost.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Item implements Parcelable {
 
@@ -137,6 +138,10 @@ public class Item implements Parcelable {
     public int getStaticImageID() { return staticImageID; }
     public boolean containsStaticImage() { return containsStaticImage; }
 
+    public int hashCode() {
+        return Math.abs(Objects.hash(name, desc, type,
+                inputDay, inputTime, location, email, containsStaticImage, System.currentTimeMillis()));
+    }
     public static List<Item> getTemporaryData(){
         List<Item> list = new ArrayList<>();
 
@@ -183,6 +188,7 @@ public class Item implements Parcelable {
         dest.writeString(inputDay);
 
     }
+
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public Item createFromParcel(Parcel in) {
             return new Item(in);

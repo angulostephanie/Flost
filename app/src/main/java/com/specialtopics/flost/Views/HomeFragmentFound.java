@@ -48,7 +48,7 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         setUpRecyclerView(view);
 
 
-        addBtn = view.findViewById(R.id.fabAdd);
+        addBtn = view.findViewById(R.id.fabAddFound); // THIS IS NULL
         Utils.setUpStartFormBtns(addBtn, getActivity());
 
     }

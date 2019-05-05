@@ -1,4 +1,7 @@
 package com.specialtopics.flost.Models;
+
+import java.util.Objects;
+
 public class Message {
 
     String mUsername;
@@ -57,7 +60,9 @@ public class Message {
         return createdAt = System.currentTimeMillis();
     }
 
-
+    public int hashCode() {
+        return Math.abs(Objects.hash(mReceiverEmail, mSenderEmail, mMessage, createdAt));
+    }
     public static class Builder {
         private String mUsername;
         private String mMessage;
