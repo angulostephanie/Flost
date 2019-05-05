@@ -64,9 +64,7 @@ public class Utils extends android.support.v4.app.Fragment {
             Item item = new Item(user.getEmail(), "iphone x",
                     "rose gold, cracked screen, :///", "lost",
                     "marketplace", Item.createTestByteArray(activity));
-
             FlostRestClient.postItem(activity, item);
-
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             Item item = new Item(user.getEmail(), "headphones",
                     "gray bose wireless headphones!!", "found",

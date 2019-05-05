@@ -47,10 +47,8 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         setUpRecyclerView(view);
 
-
-        addBtn = view.findViewById(R.id.fabAddFound); // THIS IS NULL
+        addBtn = view.findViewById(R.id.fabAddFound);
         Utils.setUpStartFormBtns(addBtn, getActivity());
-
     }
 
     private void setUpRecyclerView(View view) {

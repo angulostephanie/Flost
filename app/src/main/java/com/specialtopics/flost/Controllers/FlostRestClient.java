@@ -236,8 +236,9 @@ public class FlostRestClient {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("message_id", message.getID()); // int
-            jsonParams.put("sender_email", message.getSender());
-            jsonParams.put("receiver_email", message.getReceiver());
+            jsonParams.put("sender_email", message.getSenderEmail());
+            jsonParams.put("sender_name", message.getSenderName());
+//            jsonParams.put("receiver_email", message.getReceiver());
             jsonParams.put("message_content", message.getMessage());
             jsonParams.put("message_timestamp", message.getCreatedAt());
 
@@ -297,8 +298,10 @@ public class FlostRestClient {
                             try {
                                 JSONObject obj = array.getJSONObject(i);
                                 Message message = new Message(obj.getInt("message_id"),
-                                        obj.getString("message_id"),
-                                        obj.getString("receiver_email"),
+                                        obj.getString("sender_email"),
+                                        obj.getString("sender_name"),
+//                                        obj.getString("receiver_email"),
+//                                        obj.getString("receiver_name"),
                                         obj.getString("message_content"),
                                         obj.getString("message_timestamp"));
                                 messages.add(message);

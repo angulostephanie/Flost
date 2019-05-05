@@ -56,7 +56,7 @@ public class Item implements Parcelable {
         this.email = email;
         this.containsStaticImage = true;
         this.staticImageID = staticImageID;
-        
+
     }
 
     /*
@@ -152,20 +152,20 @@ public class Item implements Parcelable {
         return list;
     }
 
-  public Item(Parcel in){
-      itemID = in.readInt();
-      name = in.readString();
-      desc = in.readString();
-      type = in.readString();
-      location = in.readString();
-      email = in.readString();
-      timeStamp = in.readString();
-      containsStaticImage = (boolean) in.readValue(null);
-      byte[] value = new byte[in.readInt()];
-      in.readByteArray(this.image);
-      staticImageID = in.readInt();
-      inputTime = in.readString();
-      inputDay = in.readString();
+    public Item(Parcel in){
+        itemID = in.readInt();
+        name = in.readString();
+        desc = in.readString();
+        type = in.readString();
+        location = in.readString();
+        email = in.readString();
+        timeStamp = in.readString();
+        containsStaticImage = (boolean) in.readValue(null);
+        byte[] value = new byte[in.readInt()];
+        in.readByteArray(this.image);
+        staticImageID = in.readInt();
+        inputTime = in.readString();
+        inputDay = in.readString();
     }
     @Override
     public int describeContents() {
