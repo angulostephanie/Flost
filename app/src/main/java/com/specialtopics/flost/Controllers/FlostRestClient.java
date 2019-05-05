@@ -108,7 +108,7 @@ public class FlostRestClient {
 
         try {
             jsonParams.put("token", token);
-            jsonParams.put("item_id", item.createHashCode());
+            jsonParams.put("item_id", item.getItemID());
             jsonParams.put("email",item.getEmail());
             jsonParams.put("item_date", item.getInputDay());
             jsonParams.put("item_time", item.getInputTime());

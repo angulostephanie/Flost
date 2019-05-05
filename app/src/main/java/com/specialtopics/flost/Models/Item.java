@@ -127,6 +127,7 @@ public class Item implements Parcelable {
     public void setImage(byte[] image) { this.image = image; }
     public void setCanFetchImage(boolean canFetchImage) { this.canFetchImage = canFetchImage; }
     public void setStaticImageID(int staticImageID) { this.staticImageID = staticImageID; }
+    public void setItemID(int id){ this.itemID = id; }
 
 
     public int getItemID() { return itemID; }
