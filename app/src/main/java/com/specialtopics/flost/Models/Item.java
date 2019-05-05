@@ -147,6 +147,11 @@ public class Item implements Parcelable {
         return Math.abs(Objects.hash(name, desc, type,
                 inputDay, inputTime, location, email, containsStaticImage, System.currentTimeMillis()));
     }
+
+    public int createHashCode() {
+        return Math.abs(Objects.hash(this.name, this.desc, this.type,
+                this.inputDay, this.inputTime, this.location, this.email, this.containsStaticImage, System.currentTimeMillis()));
+    }
     public static List<Item> getTemporaryData(){
         List<Item> list = new ArrayList<>();
 

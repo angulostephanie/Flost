@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 import com.specialtopics.flost.Utils;
@@ -22,6 +23,7 @@ public class FormPage1 extends Fragment {
     Item newItem;
     Fragment nextFrag;
     int page;
+    String email;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,8 @@ public class FormPage1 extends Fragment {
 
         title = view.findViewById(R.id.tv_q1);
         title.setText(Utils.getQ1());
-
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        newItem.setEmail(email);
     }
     public View.OnClickListener createOnClickListeners() {
         View.OnClickListener btnClickListeners = new View.OnClickListener() {

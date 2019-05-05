@@ -47,7 +47,11 @@ public class FormActivity extends AppCompatActivity  {
             // optional
             @Override
             public void onPageSelected(int position) {
-                Fragment fragment = getFragment(position - 1);
+                Fragment fragment;
+                if(position == 7)
+                    fragment = getFragment(4);
+                else
+                    fragment = getFragment(position - 1);
                 switch (position){
                     case 2:
                         ((FormPage2) fragment).passDataThrough();
@@ -59,9 +63,10 @@ public class FormActivity extends AppCompatActivity  {
                         ((FormPage4) fragment).passDataThrough();
                         break;
                     case 5:
-                        ((FormPage5) fragment).passDataThrough();
+                        //((FormPage5) fragment).passDataThrough();
                         break;
                     case 7:
+                        ((FormPage5) fragment).passDataThrough();
                         nextPageButton.setText("FINISH");
                         break;
                 }
