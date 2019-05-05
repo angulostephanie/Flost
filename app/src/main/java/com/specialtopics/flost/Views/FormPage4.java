@@ -85,7 +85,6 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
 
                 if(newItem != null) {
                     newItem.setInputDay(chosenItem);
-                    ((FormPage5) nextFrag).onFormDataReceived(newItem);
                 }
             }
 
@@ -109,7 +108,6 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
 
                 if(newItem != null) {
                     newItem.setInputTime(chosenItem);
-                    ((FormPage5) nextFrag).onFormDataReceived(newItem);
                 }
             }
 
@@ -128,5 +126,11 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
             Log.d("test", item.getLocation());
         }
 
+    }
+
+    @Override
+    public void passDataThrough() {
+        ((FormPage5) nextFrag).onFormDataReceived(newItem);
+        ((FormPage5) nextFrag).onFormDataReceived(newItem);
     }
 }

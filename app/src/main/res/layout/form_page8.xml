@@ -6,24 +6,53 @@
 
     <TextView
         android:id="@+id/tv_q5"
+        android:layout_marginTop="40dp"
         style="@style/questionTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QUESTION 5" />
+        android:text="QUESTION 8" />
+
+    <ImageView
+        android:layout_marginTop="30dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/photo_display"
+        android:background="@color/black"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="150dp">
+        android:layout_height="120dp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp">
 
-        <EditText
-            android:id="@+id/et_q5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Item Name" />
+
+        <Button
+            android:id="@+id/upload_btn"
+            android:layout_width="230dp"
+            android:background="@color/themecolor"
+            android:layout_height="40dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:lineSpacingExtra="4sp"
+            android:gravity="center"
+            android:text="UPLOAD PHOTO"/>
+
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/camera_btn"
+            android:layout_width="230dp"
+            android:background="@color/themecolor"
+            android:layout_height="40dp"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:lineSpacingExtra="4sp"
+            android:gravity="center"
+            android:text="USE CAMERA"/>
 
     </RelativeLayout>
 

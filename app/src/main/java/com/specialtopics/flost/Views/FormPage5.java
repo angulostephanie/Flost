@@ -82,6 +82,12 @@ public class FormPage5 extends Fragment implements OnFormDataListener {
         }
     }
 
+    @Override
+    public void passDataThrough() {
+        //if(newItem.getType() == )
+    }
+
+
     private void setUpRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.match_recycler_view);
         mAdapter = new ItemAdapter(getActivity(), mItems, true);

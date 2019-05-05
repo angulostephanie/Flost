@@ -71,7 +71,6 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
                 String chosenItem = (String) parent.getSelectedItem();
                 if(newItem!=null) {
                     newItem.setLocation(chosenItem);
-                    ((FormPage4) nextFrag).onFormDataReceived(newItem);
                     activity.showNextButton();
                 }
             }
@@ -93,6 +92,11 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
         title.setText(Utils.getQ3(verb));
         Log.d("test", item.getName());
 
+    }
+
+    @Override
+    public void passDataThrough() {
+        ((FormPage4) nextFrag).onFormDataReceived(newItem);
     }
 
 }

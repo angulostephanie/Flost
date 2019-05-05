@@ -76,7 +76,6 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
                 input = editText.getText().toString();
                 if(newItem != null) {
                     newItem.setName(input);
-                    ((FormPage3) nextFrag).onFormDataReceived(newItem);
                 }
                 activity.showNextButton();
             }
@@ -89,5 +88,10 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
     public void onFormDataReceived(Item item) {
         newItem = item;
         Log.d("test", item.getType());
+    }
+
+    @Override
+    public void passDataThrough() {
+        ((FormPage3) nextFrag).onFormDataReceived(newItem);
     }
 }

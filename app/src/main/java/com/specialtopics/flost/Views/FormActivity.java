@@ -3,6 +3,7 @@ package com.specialtopics.flost.Views;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -46,14 +47,33 @@ public class FormActivity extends AppCompatActivity  {
             // optional
             @Override
             public void onPageSelected(int position) {
-
+                Fragment fragment = getFragment(position - 1);
+                switch (position){
+                    case 2:
+                        ((FormPage2) fragment).passDataThrough();
+                        break;
+                    case 3:
+                        ((FormPage3) fragment).passDataThrough();
+                        break;
+                    case 4:
+                        ((FormPage4) fragment).passDataThrough();
+                        break;
+                    case 5:
+                        ((FormPage5) fragment).passDataThrough();
+                        break;
+                    case 7:
+                        nextPageButton.setText("FINISH");
+                        break;
+                }
             }
 
         });
-
-
     }
 
+    public Fragment getFragment(int pos){
+        return getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.vpPager + ":" + pos);
+
+    }
     public void setUpBtnListeners(){
         nextPageButton = findViewById(R.id.nextPageButton);
         previousPageButton = findViewById(R.id.previousPageButton);
@@ -85,6 +105,10 @@ public class FormActivity extends AppCompatActivity  {
         });
     }
 
+
+    public void setPage(int page){
+        viewPager.setCurrentItem(page - 1);
+    }
     public void hidePrevButton(){
         previousPageButton.setVisibility(View.INVISIBLE);
     }
@@ -106,9 +130,6 @@ public class FormActivity extends AppCompatActivity  {
         int currentIndex = viewPager.getCurrentItem();
         int total = viewPager.getAdapter().getCount();
 
-        if (currentIndex + change < 0) {
-            return 0;
-        }
         return Math.abs((currentIndex + change) % total) ;
     }
 

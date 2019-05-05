@@ -25,6 +25,7 @@ public class Item implements Parcelable {
     private String email;
     private String timeStamp;
     private boolean containsStaticImage;
+    private boolean canFetchImage = true;
     private byte[] image;
     private int staticImageID;
     private String inputTime;
@@ -80,8 +81,8 @@ public class Item implements Parcelable {
         When fetching the item, you would provide the timestamp/item id given from the db
      */
 
-    public Item(int itemID, String email, String name, String desc, String type,
-                String location, String timestamp, int staticImageID) {
+    public Item(int itemID, String email, String name, String desc, String inputDay, String inputTime,
+                String type, String location, String timestamp, int staticImageID) {
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
@@ -95,17 +96,19 @@ public class Item implements Parcelable {
         this.containsStaticImage = true;
     }
 
-    public Item(int itemID, String email, String name, String desc, String type,
-                String location, String timestamp, byte[] image) {
+    public Item(int itemID, String email, String name, String desc, String inputDay,
+                String inputTime, String type, String location, String timestamp) {
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
         this.type = type;
         this.location = location;
+        this.inputTime = inputTime;
+        this.inputDay = inputDay;
         this.timeStamp = timestamp;
         this.email = email;
-        this.image = image;
         this.containsStaticImage = false;
+        this.staticImageID = -1;
     }
 
     public Item(String name, String desc) {
@@ -122,6 +125,7 @@ public class Item implements Parcelable {
     public void setEmail(String email) { this.email = email; }
     public void setTimeStamp(String timeStamp) { this.timeStamp = timeStamp; }
     public void setImage(byte[] image) { this.image = image; }
+    public void setCanFetchImage(boolean canFetchImage) { this.canFetchImage = canFetchImage; }
     public void setStaticImageID(int staticImageID) { this.staticImageID = staticImageID; }
 
 
@@ -134,6 +138,7 @@ public class Item implements Parcelable {
     public String getLocation() { return location; }
     public String getEmail() { return email; }
     public String getTimeStamp() { return timeStamp; }
+    public boolean canFetchImage() { return  canFetchImage; }
     public byte[] getImage() { return image; }
     public int getStaticImageID() { return staticImageID; }
     public boolean containsStaticImage() { return containsStaticImage; }
@@ -201,7 +206,16 @@ public class Item implements Parcelable {
 
     public String toString() {
         return itemID + ", " + email + ", " + name + ", " + desc + ", " + type + ", " + location
-                + ", " + timeStamp + ", " + staticImageID;
+                + ", " + timeStamp + ", [" + staticImageID  +"]";
+    }
+
+    public void setNotFoundImage(Context mContext) {
+        Drawable d = mContext.getDrawable(R.drawable.image_not_found);
+        Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+
+        image = stream.toByteArray();
     }
 
     public static byte[] createTestByteArray(Context mContext) {

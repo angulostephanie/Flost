@@ -1,20 +1,37 @@
 package com.specialtopics.flost.Views;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.OnFormDataListener;
 import com.specialtopics.flost.R;
 import com.specialtopics.flost.Utils;
+import com.squareup.picasso.Picasso;
+
+import static android.app.Activity.RESULT_OK;
 
 public class FormPage8 extends Fragment implements OnFormDataListener {
-    TextView title;
-    Item newItem;
+    private TextView title;
+    private Item newItem;
+    private Button uploadButton;
+    private Button cameraButton;
+    public ImageView mImageview;
+    private StorageReference mStorage;
+    private static final int CAMERA_REQUEST_CODE = 1;
+    private static final int GALLERY_INTENT = 2;
 
     public static FormPage8 newInstance(int page) {
         FormPage8 fragment = new FormPage8();
@@ -40,13 +57,84 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mImageview = view.findViewById(R.id.photo_display);
         title = view.findViewById(R.id.tv_q5);
         title.setText(Utils.getQ8());
+        uploadButton = view.findViewById(R.id.upload_btn);
+        cameraButton = view.findViewById(R.id.camera_btn);
 
+        uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, GALLERY_INTENT);
+            }
+        });
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent1, CAMERA_REQUEST_CODE);
+            }
+        });
+
+        /*
+        mImageview.setDrawingCacheEnabled(true);
+        mImageview.buildDrawingCache();
+        Bitmap bitmap = mImageview .getDrawingCache();
+
+        ByteArrayOutputStream baas = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baas);
+
+        byte[] data = baas.toByteArray();
+
+        UploadTask uploadTask = mStorage.child("{image-folder}").child("unique-id-image").putBytes(data);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(getContext(), "Picture upload failed", Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                String downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        }); */
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("hi", "1");
+        if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
+            Log.d("hi", "2");
+            final Uri uri = data.getData();
+            Picasso.get().load(uri).fit().centerCrop().into(mImageview);
+        }
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
+            Log.d("hi", "3");
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            mImageview.setImageBitmap(photo);
+            Uri uri1 = data.getData();
+            Picasso.get().load(uri1).fit().centerCrop().into(mImageview);
+
+        }
     }
 
     @Override
     public void onFormDataReceived(Item item) {
         newItem = item;
     }
+
+    @Override
+    public void passDataThrough() {
+
+    }
+
+
 }
