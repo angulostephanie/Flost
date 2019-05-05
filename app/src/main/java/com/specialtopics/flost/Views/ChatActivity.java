@@ -1,6 +1,5 @@
 package com.specialtopics.flost.Views;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,18 +22,21 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView mMessageRecycler;
     private MessageListAdapter mMessageAdapter;
     private String receiverEmail;
+    private Integer chatroomId;
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_list);
+        setContentView(R.layout.chat_activity_container);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         receiverEmail = getIntent().getExtras().getString("receiver_email");
+        chatroomId = getIntent().getExtras().getInt("chatroom_id");
 
 //        List<Message> messages = mMessageAdapter.getmMessageList();
         if(mUser.getEmail() != null) {
+            // TODO TBD whether to pass in room id or sender receiver email
             List<Message> messages = FlostRestClient.getMessages(this, mUser.getEmail(), receiverEmail);
 
             mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);

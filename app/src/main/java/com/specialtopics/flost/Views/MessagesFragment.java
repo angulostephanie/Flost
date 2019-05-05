@@ -2,9 +2,7 @@ package com.specialtopics.flost.Views;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,14 +16,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Controllers.FlostRestClient;
-import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
 import com.specialtopics.flost.Controllers.ChatApplication;
@@ -111,7 +107,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         Log.d(TAG, "socket created, connected? " + bool);
 
 //        startSignIn();
-        return inflater.inflate(R.layout.activity_message_list, container, false);
+        return inflater.inflate(R.layout.message_list_fragment, container, false);
     }
 
     @Override
