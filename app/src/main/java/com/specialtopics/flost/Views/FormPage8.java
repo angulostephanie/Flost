@@ -129,6 +129,7 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
     @Override
     public void onFormDataReceived(Item item) {
         newItem = item;
+        Log.d("test", newItem.toString());
     }
 
     @Override

@@ -25,6 +25,8 @@ public class FormPage5 extends Fragment implements OnFormDataListener {
     ItemAdapter mAdapter;
     List<Item> mItems = Item.getTemporaryData();
     FormActivity activity;
+    Fragment fragment;
+    int page;
 
     public static FormPage5 newInstance(int page) {
         FormPage5 fragment = new FormPage5();
@@ -42,16 +44,19 @@ public class FormPage5 extends Fragment implements OnFormDataListener {
             activity.showNextButton();
             activity.hidePrevButton();
 
+            activity.setPageOnNextClick(8);
+            /* FOR VERSION 2.0
             if(newItem != null && newItem.getType() == "lost")
                 activity.setPageOnNextClick(8);
             else
-                activity.setPageOnNextClick(6);
+                activity.setPageOnNextClick(6); */
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        page = getArguments().getInt("page");
 
     }
 
@@ -84,7 +89,17 @@ public class FormPage5 extends Fragment implements OnFormDataListener {
 
     @Override
     public void passDataThrough() {
-        //if(newItem.getType() == )
+        fragment = Utils.getNextFrag(getActivity(), 6);
+        ((FormPage8)fragment).onFormDataReceived(newItem);
+        /* FOR VERSION 2.0
+        if (newItem.getType() == "found")  {
+            fragment = Utils.getNextFrag(getActivity(), page);
+            ((FormPage6)fragment).onFormDataReceived(newItem);
+        }
+        else { // send to photo upload page
+            fragment = Utils.getNextFrag(getActivity(), 6);
+            ((FormPage8)fragment).onFormDataReceived(newItem);
+        } */
     }
 
 
