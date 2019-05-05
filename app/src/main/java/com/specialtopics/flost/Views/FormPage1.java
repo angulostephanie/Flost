@@ -24,6 +24,7 @@ public class FormPage1 extends Fragment {
     Fragment nextFrag;
     int page;
     String email;
+    boolean answered;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,16 @@ public class FormPage1 extends Fragment {
 
         if (isVisibleToUser  && activity != null) {
             activity.hidePrevButton();
-            activity.hideNextButton();
+            if(!answered)
+                activity.hideNextButton();
+            else
+                activity.showNextButton();
         }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        answered = false;
         nextFrag = Utils.getNextFrag(getActivity(), page);
         find_button = view.findViewById(R.id.find_item_btn);
         lost_button = view.findViewById(R.id.lost_item_btn);
@@ -69,6 +74,7 @@ public class FormPage1 extends Fragment {
     public View.OnClickListener createOnClickListeners() {
         View.OnClickListener btnClickListeners = new View.OnClickListener() {
             public void onClick(View v) {
+                answered = true;
                 switch (v.getId()) {
                     case R.id.find_item_btn:
                         focusButton(find_button, lost_button);

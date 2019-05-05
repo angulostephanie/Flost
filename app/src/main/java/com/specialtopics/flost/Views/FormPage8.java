@@ -2,7 +2,6 @@ package com.specialtopics.flost.Views;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,7 +19,6 @@ import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.OnFormDataListener;
 import com.specialtopics.flost.R;
 import com.specialtopics.flost.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -127,20 +125,16 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            final Uri uri = data.getData();
-            Picasso.get().load(uri).fit().centerCrop().into(mImageview);
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            mImageview.setImageBitmap(photo);
+            finishBtn.setVisibility(View.VISIBLE);
+            setImageHelper(photo);
         }
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-            byte[] bitmapdata = stream.toByteArray();
-            newItem.setImage(bitmapdata);
             mImageview.setImageBitmap(photo);
-            Uri uri1 = data.getData();
-            Picasso.get().load(uri1).fit().centerCrop().into(mImageview);
-
             finishBtn.setVisibility(View.VISIBLE);
+            setImageHelper(photo);
         }
     }
 
@@ -148,6 +142,13 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
     public void onFormDataReceived(Item item) {
         newItem = item;
         Log.d("test", newItem.toString());
+    }
+
+    public void setImageHelper(Bitmap photo){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        byte[] bitmapdata = stream.toByteArray();
+        newItem.setImage(bitmapdata);
     }
 
     @Override

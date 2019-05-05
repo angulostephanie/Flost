@@ -42,7 +42,7 @@ public class FormPage5 extends Fragment implements OnFormDataListener {
 
         if (isVisibleToUser) {
             activity.showNextButton();
-            activity.hidePrevButton();
+            activity.showPrevButton();
 
             activity.setPageOnNextClick(8);
             /* FOR VERSION 2.0

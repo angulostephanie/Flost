@@ -24,6 +24,7 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
     int page;
     Fragment nextFrag;
     FormActivity activity;
+    boolean answered = false;
 
     public static FormPage3 newInstance(int page) {
         FormPage3 fragment = new FormPage3();
@@ -41,7 +42,10 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            activity.hideNextButton();
+            if(!answered)
+                activity.hideNextButton();
+            else
+                activity.showNextButton();
         }
     }
 
@@ -97,6 +101,7 @@ public class FormPage3 extends Fragment implements OnFormDataListener {
     @Override
     public void passDataThrough() {
         ((FormPage4) nextFrag).onFormDataReceived(newItem);
+        answered = true;
     }
 
 }

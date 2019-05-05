@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,16 +63,18 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         byte[] imageByte = item.getImage();
         holder.name.setText(item.getName());
 
-        if(imageByte != null){
+        if (imageByte != null) {
             Bitmap bmp = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
+            Log.d("bmp_check", String.valueOf(bmp));
             holder.thumbnail.setImageBitmap(bmp);
         }
         //holder.thumbnail.setImageResource(item.getImage());
-        if(matchFlag)
+        if (matchFlag)
             holder.match.setText("MATCH: "); //TODO: create util function that finds match percentage
         //holder.type.setText(item.getType());
         //holder.user.setText(item.getUserID());
     }
+
 
     @Override
     public int getItemCount() {

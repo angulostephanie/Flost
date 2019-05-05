@@ -66,8 +66,9 @@ public class FormActivity extends AppCompatActivity  {
                         //((FormPage5) fragment).passDataThrough();
                         break;
                     case 7:
+                        hidePrevButton();
                         ((FormPage5) fragment).passDataThrough();
-                        nextPageButton.setText("FINISH");
+                        nextPageButton.setText("");
                         break;
                 }
             }
