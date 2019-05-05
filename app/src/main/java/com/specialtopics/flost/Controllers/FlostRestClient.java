@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -63,20 +64,18 @@ public class FlostRestClient {
         }
     }
 
-    public static List<Item> getItems(Context mContext, String type) {
+    public static void getItems(Context mContext, String type, JsonHttpResponseHandler jsonHttpResponseHandler) {
         Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
-            return FlostRestClient.getItemsHelper(mContext, account.getIdToken(), type);
+            FlostRestClient.getItemsHelper(mContext, account.getIdToken(), type, jsonHttpResponseHandler);
         } catch (ApiException e) {
             Log.w(TAG, "Google sign in failed", e);
         }
-        return null;
     }
-    private static List<Item> getItemsHelper(Context mContext, String token, String type) {
+    private static void getItemsHelper(Context mContext, String token, String type, JsonHttpResponseHandler jsonHttpResponseHandler) {
         String url = MAIN_URL + "/getItems";
         JSONObject jsonParams = new JSONObject();
-        final List<Item> items = new ArrayList<>();
 
         try {
             if(!type.isEmpty()) jsonParams.put("item_type", type);
@@ -84,61 +83,13 @@ public class FlostRestClient {
             Log.d(TAG, "currently in json params " + jsonParams.toString());
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                client.get(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray array) {
-
-                        Log.d(TAG, "JSONArray returned");
-                        Log.d(TAG, array.toString());
-
-                        for(int i = 0; i < array.length(); i++) {
-                            try {
-                                JSONObject obj = array.getJSONObject(i);
-                                // TODO: update get items func
-                                int staticImageID = obj.getInt("static_image_id");
-                                if(staticImageID == -1) {
-                                    // image is hosted on firebase
-                                    Item item = new Item(obj.getInt("item_id"),
-                                        obj.getString("email"),
-                                        obj.getString("item_name"),
-                                        obj.getString("item_desc"),
-                                        obj.getString("item_type"),
-                                        obj.getString("item_location"),
-                                        obj.getString("item_timestamp"));
-                                    fetchItemImage(mContext, item);
-                                    items.add(item);
-                                    Log.d(TAG, item.toString());
-
-                                } else {
-                                    // find the static image in the android resource folder
-                                }
-                            } catch(JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d(TAG, "can't fetch items rn :/");
-
-                    }
-
-                    @Override
-                    public void onProgress(long bytesWritten, long totalSize) {
-                        super.onProgress(bytesWritten, totalSize);
-                        // add a progress bar animation here! :)
-                    }
-                });
+                client.get(mContext, url, entity, "application/json", jsonHttpResponseHandler);
             } catch(UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         } catch(JSONException e) {
             e.printStackTrace();
         }
-
-
-        return items;
     }
 
     public static void postItem(Context mContext, Item item) {
@@ -455,21 +406,21 @@ public class FlostRestClient {
                     }
                 });
     }
-    private static void fetchItemImage(Context mContext, Item item) {
-        final Item itemWithImage = item;
+    public static void fetchItemImage(Context mContext, Item item, OnCompleteListener<byte[]> completionCallBack) {
+        Item itemWithImage = item;
         StorageReference storageRef = firebaseStorage.getReference().child("images/");
         StorageReference imageRef = storageRef.child(Integer.toString(item.getItemID()));
         final long LIMIT = 512 * 512;
-        imageRef.getBytes(LIMIT).addOnSuccessListener(bytes ->
-                itemWithImage.setImage(bytes))
-                .addOnFailureListener(e -> {
+        Log.d(TAG, "gonna fetch the item's images now, brb");
+
+        imageRef.getBytes(LIMIT).addOnSuccessListener(bytes -> {
+                    Log.d(TAG, "success!");
+                    itemWithImage.setImage(bytes);
+                }).addOnFailureListener(e -> {
                     Log.d(TAG, "Fetching image failed :/ " + e.getMessage());
                     itemWithImage.setCanFetchImage(false);
                     itemWithImage.setNotFoundImage(mContext);
-                }).addOnCompleteListener(task1 -> {
-                    // TODO: update the item adapter pls.
-                    //mAdapter.notifyDataSetChanged();
-                });
+                }).addOnCompleteListener(completionCallBack);
     }
     private static Task<GoogleSignInAccount> getGoogleSignInTask(Context mContext) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

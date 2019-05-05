@@ -81,8 +81,8 @@ public class Item implements Parcelable {
         When fetching the item, you would provide the timestamp/item id given from the db
      */
 
-    public Item(int itemID, String email, String name, String desc, String type,
-                String location, String timestamp, int staticImageID) {
+    public Item(int itemID, String email, String name, String desc, String inputDay, String inputTime,
+                String type, String location, String timestamp, int staticImageID) {
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
@@ -96,16 +96,19 @@ public class Item implements Parcelable {
         this.containsStaticImage = true;
     }
 
-    public Item(int itemID, String email, String name, String desc, String type,
-                String location, String timestamp) {
+    public Item(int itemID, String email, String name, String desc, String inputDay,
+                String inputTime, String type, String location, String timestamp) {
         this.itemID = itemID;
         this.name = name;
         this.desc = desc;
         this.type = type;
         this.location = location;
+        this.inputTime = inputTime;
+        this.inputDay = inputDay;
         this.timeStamp = timestamp;
         this.email = email;
         this.containsStaticImage = false;
+        this.staticImageID = -1;
     }
 
     public Item(String name, String desc) {
@@ -203,7 +206,7 @@ public class Item implements Parcelable {
 
     public String toString() {
         return itemID + ", " + email + ", " + name + ", " + desc + ", " + type + ", " + location
-                + ", " + timeStamp + ", " + staticImageID;
+                + ", " + timeStamp + ", [" + staticImageID  +"]";
     }
 
     public void setNotFoundImage(Context mContext) {
