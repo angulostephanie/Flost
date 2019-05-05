@@ -1,5 +1,6 @@
 package com.specialtopics.flost.Models;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,6 +13,7 @@ import com.specialtopics.flost.R;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Item implements Parcelable {
 
@@ -37,7 +39,7 @@ public class Item implements Parcelable {
         this.timeStamp = "";
         this.inputTime = "";
         this.inputDay = "";
-    }
+    };
 
     /*
        THE NEXT TWO CONSTRUCTORS ARE USED WHEN CREATING AN ITEM
@@ -54,6 +56,7 @@ public class Item implements Parcelable {
         this.email = email;
         this.containsStaticImage = true;
         this.staticImageID = staticImageID;
+
     }
 
     /*
@@ -114,6 +117,8 @@ public class Item implements Parcelable {
     public void setDesc(String desc) { this.desc = desc; }
     public void setType(String type) { this.type = type; }
     public void setLocation(String location) { this.location = location; }
+    public void setInputTime(String inputTime) {this.inputTime = inputTime; }
+    public void setInputDay(String inputDay) { this.inputDay = inputDay; }
     public void setEmail(String email) { this.email = email; }
     public void setTimeStamp(String timeStamp) { this.timeStamp = timeStamp; }
     public void setImage(byte[] image) { this.image = image; }
@@ -124,6 +129,8 @@ public class Item implements Parcelable {
     public String getName() { return name; }
     public String getDesc() { return desc; }
     public String getType() { return type; }
+    public String getInputTime() { return inputTime; }
+    public String getInputDay() { return inputDay; }
     public String getLocation() { return location; }
     public String getEmail() { return email; }
     public String getTimeStamp() { return timeStamp; }
@@ -131,6 +138,10 @@ public class Item implements Parcelable {
     public int getStaticImageID() { return staticImageID; }
     public boolean containsStaticImage() { return containsStaticImage; }
 
+    public int hashCode() {
+        return Math.abs(Objects.hash(name, desc, type,
+                inputDay, inputTime, location, email, containsStaticImage, System.currentTimeMillis()));
+    }
     public static List<Item> getTemporaryData(){
         List<Item> list = new ArrayList<>();
 
@@ -142,21 +153,20 @@ public class Item implements Parcelable {
     }
 
     public Item(Parcel in){
-      itemID = in.readInt();
-      name = in.readString();
-      desc = in.readString();
-      type = in.readString();
-      location = in.readString();
-      email = in.readString();
-      timeStamp = in.readString();
-      containsStaticImage = (boolean) in.readValue(null);
-      byte[] value = new byte[in.readInt()];
-      in.readByteArray(this.image);
-      staticImageID = in.readInt();
-      inputTime = in.readString();
-      inputDay = in.readString();
+        itemID = in.readInt();
+        name = in.readString();
+        desc = in.readString();
+        type = in.readString();
+        location = in.readString();
+        email = in.readString();
+        timeStamp = in.readString();
+        containsStaticImage = (boolean) in.readValue(null);
+        byte[] value = new byte[in.readInt()];
+        in.readByteArray(this.image);
+        staticImageID = in.readInt();
+        inputTime = in.readString();
+        inputDay = in.readString();
     }
-
     @Override
     public int describeContents() {
         return 0;

@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/item_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="7dp"
@@ -57,6 +57,14 @@
                 android:textColor="@color/darkertheme"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_match"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text=""
+                android:layout_centerVertical="true"/>
 
             <Button
                 android:id="@+id/button"

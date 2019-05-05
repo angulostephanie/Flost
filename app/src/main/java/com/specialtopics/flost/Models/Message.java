@@ -1,10 +1,13 @@
 package com.specialtopics.flost.Models;
+
+import java.util.Objects;
+
 public class Message {
 
     private String mUsername;
     private String mMessage;
-//    String mReceiverEmail;
-//    String mReceiverName;
+    String mReceiverEmail;
+    String mReceiverName;
     private String mSenderName;
     private String mSenderEmail;
 //    private User mReceiver; // I don't think we should have the entire User obj, probably just having their email is fine.
@@ -102,4 +105,9 @@ public class Message {
 //            return message;
 //        }
 //    }
+
+    public int hashCode() {
+        return Math.abs(Objects.hash(mReceiverEmail, mSenderEmail, mMessage, createdAt));
+    }
+
 }
