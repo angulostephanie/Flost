@@ -5,8 +5,14 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -15,6 +21,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.Models.Message;
+import com.specialtopics.flost.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +37,9 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 public class FlostRestClient {
     private final static String TAG = "FlostRestClient";
     private final static String MAIN_URL =  "http://52.52.100.133:80"; // "http://10.0.2.2:8080";
-    private final static AsyncHttpClient client = new AsyncHttpClient();
+    private final static String CONTENT_TYPE = "application/json";
     private static final String GS_BUCKET = "gs://flostapp-1556168232146.appspot.com/";
+    private final static AsyncHttpClient client = new AsyncHttpClient();
     private static FirebaseStorage firebaseStorage = FirebaseStorage.getInstance(GS_BUCKET);
 
 
@@ -138,7 +146,7 @@ public class FlostRestClient {
 
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
+                client.post(mContext, url, entity, CONTENT_TYPE, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -166,6 +174,62 @@ public class FlostRestClient {
         }
     }
 
+    public static void deleteItem(Context mContext, Item item) {
+        Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
+        try {
+            // Google Sign In was successful, authenticate with Firebase
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            FlostRestClient.deleteItemHelper(mContext, account.getIdToken(), item);
+        } catch (ApiException e) {
+            // Google Sign In failed, update UI appropriately
+            Log.w(TAG, "Google sign in failed", e);
+        }
+
+    }
+
+    private static void deleteItemHelper(Context mContext, String token, Item item) {
+        String url = MAIN_URL + "/deleteItem";
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            jsonParams.put("token", token);
+            Log.d(TAG, "Item id isssss – " + item.getItemID());
+            jsonParams.put("item_id", item.getItemID());
+            jsonParams.put("email", item.getEmail());
+            Log.d(TAG, "deleting, boohoo");
+            try {
+                StringEntity entity = new StringEntity(jsonParams.toString());
+                client.delete(mContext, url, entity, CONTENT_TYPE, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        Log.d(TAG, "successfully deleted this item from mysql!");
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.d(TAG, "failed!! could not delete this item from mysql :(");
+                        Toast.makeText(mContext, "Item was not deleted, please try again.", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        // add a progress bar animation here! :)
+                    }
+                });
+            } catch(UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void postMessage(Context mContext, Message message) {
         String url = MAIN_URL + "/postMessage";
         JSONObject jsonParams = new JSONObject();
@@ -181,7 +245,7 @@ public class FlostRestClient {
             Log.d(TAG, "message !");
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                client.post(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
+                client.post(mContext, url, entity, CONTENT_TYPE, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
@@ -222,7 +286,7 @@ public class FlostRestClient {
             Log.d(TAG, "currently in json params " + jsonParams.toString());
             try {
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                client.get(mContext, url, entity, "application/json", new JsonHttpResponseHandler() {
+                client.get(mContext, url, entity, CONTENT_TYPE, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray array) {
                         // Pull out the first event on the public timeline
@@ -295,5 +359,15 @@ public class FlostRestClient {
                         Log.d("Progress", String.valueOf(progress));
                     }
                 });
+    }
+
+    private static Task<GoogleSignInAccount> getGoogleSignInTask(Context mContext) {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mContext.getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(mContext, gso);
+        Task<GoogleSignInAccount> task = mGoogleSignInClient.silentSignIn();
+        return task;
     }
 }

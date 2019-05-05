@@ -60,7 +60,9 @@ public class LoginActivity extends Activity {
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         loginBtn = findViewById(R.id.loginBtn);
 
         loginBtn.setOnClickListener(v -> {
@@ -122,6 +124,7 @@ public class LoginActivity extends Activity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
+                        Log.d(TAG, "token: " + acct.getIdToken());
                         FlostRestClient.authenticateUser(mContext, acct.getIdToken(), new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -193,45 +196,5 @@ public class LoginActivity extends Activity {
             finish();
         }
     };
-
-
-
-
-        /*
-        String uid = user.getUid();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userNameRef = rootRef.child("users").child(uid);
-
-        userNameRef.addListenerForSingleValueEvent( new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()) {
-                    //create new user
-                    Log.d(TAG, "Adding this user to the database :)!");
-                    String first = "";
-                    if(user.getDisplayName() != null) {
-                        first = user.getDisplayName().split(" ")[0];
-                    }
-
-                    String email = user.getEmail();
-                    String uid = user.getUid();
-
-                    User dbUser = new User(uid, email, first);
-                    Map<String, Object> userValues = dbUser.toMap();
-
-                    // this line adds the user to the db's json tree
-                    userNameRef.updateChildren(userValues);
-
-                } else {
-                    Log.d(TAG, "User already exists!");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage()); //Don't ignore errors!
-            }
-        });
-    */
 
 }
