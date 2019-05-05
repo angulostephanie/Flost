@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
     public void onStart() {
         super.onStart();
         // Update UI accordingly based on if user is already signed in (non-null)
-        updateUI();
+        // updateUI();
     }
 
     @Override
@@ -114,15 +114,14 @@ public class LoginActivity extends Activity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setTitle("Authenticating...");
+        progressDialog.show();
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-
-                        final ProgressDialog progressDialog = new ProgressDialog(mContext);
-                        progressDialog.setTitle("Authenticating...");
-                        progressDialog.show();
                         FlostRestClient.authenticateUser(mContext, acct.getIdToken(), new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -166,6 +165,7 @@ public class LoginActivity extends Activity {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        progressDialog.dismiss();
                         Snackbar.make(findViewById(R.id.login_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                     }
 
