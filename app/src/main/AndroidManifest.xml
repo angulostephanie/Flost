@@ -33,7 +33,7 @@
             android:exported="true">
         </activity>
 
-        <activity android:name="com.specialtopics.flost.Views.ChatActivity">
+        <activity android:name="com.specialtopics.flost.Models.ChatActivity">
 
         </activity>
 

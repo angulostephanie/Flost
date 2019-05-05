@@ -1,4 +1,4 @@
-package com.specialtopics.flost.Views;
+package com.specialtopics.flost.Models;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

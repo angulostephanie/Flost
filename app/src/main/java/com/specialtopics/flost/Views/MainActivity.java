@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.specialtopics.flost.Models.ChatListActivity;
 import com.specialtopics.flost.R;
 
 public class MainActivity extends AppCompatActivity {
