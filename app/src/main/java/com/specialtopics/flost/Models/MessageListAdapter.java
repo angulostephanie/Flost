@@ -2,6 +2,7 @@ package com.specialtopics.flost.Models;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.List;
 
 
 public class MessageListAdapter extends RecyclerView.Adapter {
+    private static final String TAG = "Adapter";
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
@@ -38,18 +40,31 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
+        String temp = "";
+        for(int i = 0; i < mMessageList.size(); i++){
+            temp = temp + mMessageList.get(i).getMessage();
+        }
+        Log.d(TAG, temp);
+        Log.d(TAG, "messagelist size: " + mMessageList.size());
+
         return mMessageList.size();
     }
 
     // Determines the appropriate ViewType according to the sender of the message.
     @Override
     public int getItemViewType(int position) {
+
+        Log.e(TAG, "getItemViewType");
+
+
         Message message = (Message) mMessageList.get(position);
 
-        if (message.getSender().equals(mUser.getUid())) {
+        if (message.getSenderName().equals(mUser.getDisplayName())) {
+            Log.e(TAG, "sent message returned.");
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
+            Log.e(TAG, "received message returned.");
             // If some other user sent the message
             return VIEW_TYPE_MESSAGE_RECEIVED;
         }
@@ -59,6 +74,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
+
+        Log.e(TAG, "onCreateViewHolder");
+
 
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = LayoutInflater.from(parent.getContext())
@@ -77,14 +95,24 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message message = (Message) mMessageList.get(position);
+        Log.e(TAG, "in onBindViewHolder.");
 
-        switch (holder.getItemViewType()) {
+
+        switch (getItemViewType(position)) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(message);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bind(message);
         }
+
+//        switch (holder.getItemViewType()) {
+//            case VIEW_TYPE_MESSAGE_SENT:
+//                ((SentMessageHolder) holder).bind(message);
+//                break;
+//            case VIEW_TYPE_MESSAGE_RECEIVED:
+//                ((ReceivedMessageHolder) holder).bind(message);
+//        }
     }
 
     private class SentMessageHolder extends RecyclerView.ViewHolder {
@@ -98,6 +126,9 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
 
         void bind(Message message) {
+
+            Log.e(TAG, "binding SentMessageHolder");
+
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
@@ -119,12 +150,16 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         }
 
         void bind(Message message) {
+
+            Log.e(TAG, "binding ReceivedMessageHolder");
+
+
             messageText.setText(message.getMessage());
 
             // Format the stored timestamp into a readable String using method.
             timeText.setText(DateUtils.formatDateTime(message.getCreatedAt()));
 
-            nameText.setText(message.getSender());
+            nameText.setText(message.getSenderName());
 
             // TODO Insert the profile image from the URL into the ImageView.
             //Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);

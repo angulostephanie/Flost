@@ -33,11 +33,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mMessageRecycler = (RecyclerView) findViewById(R.id.reyclerview_message_list);
         mMessageAdapter = new MessageListAdapter(this, messages);
-//        String temp = "";
-//        for(int i = 0; i < messages.size(); i++){
-//            temp = temp + messages.get(i).getMessage();
-//        }
-//        Log.e(TAG, temp);
+
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 }

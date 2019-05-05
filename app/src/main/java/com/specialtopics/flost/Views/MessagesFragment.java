@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.specialtopics.flost.Controllers.FlostRestClient;
+import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
 import com.specialtopics.flost.Controllers.ChatApplication;
@@ -129,8 +131,8 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         Log.i(TAG, "creating view!");
 
         mMessagesView = (RecyclerView) view.findViewById(R.id.reyclerview_message_list);
-        mMessagesView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mMessagesView.setAdapter(mAdapter);
+        mMessagesView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mInputMessageView = (EditText) view.findViewById(R.id.edittext_chatbox);
         mInputMessageView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -167,6 +169,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
             }
         });
 
+
         Button sendButton = (Button) view.findViewById(R.id.button_chatbox_send);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +178,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
                 Log.i(TAG, "sent action attempted");
             }
         });
+
     }
 
 //    @Override
@@ -291,9 +295,13 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     };
 
     private void addMessage(String username, String message) {
-        mMessages.add(new Message.Builder()
-                .username(username).message(message).build());
+        Message newMessage = new Message(username, mUser.getEmail(), message);
+        //TODO push message object to server
+        FlostRestClient.postMessage(getContext(), newMessage);
+
+        mMessages.add(newMessage);
         mAdapter.notifyItemInserted(mMessages.size() - 1);
+        Log.e(TAG, "item inserted notified.");
         scrollToBottom();
     }
 
