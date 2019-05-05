@@ -91,9 +91,13 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        String room = "temp room";
+
         ChatApplication app = (ChatApplication) getActivity().getApplication();
         mSocket = app.getSocket();
         Log.i(TAG, "got socket!");
+        // TODO add server call back function
+        //mSocket.emit("join-room", room);
         mSocket.on(Socket.EVENT_CONNECT,onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
@@ -102,6 +106,9 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
 //        mSocket.on("typing", onTyping);
 //        mSocket.on("stop typing", onStopTyping);
         mSocket.connect();
+
+        Boolean bool = mSocket.connected();
+        Log.d(TAG, "socket created, connected? " + bool);
 
 //        startSignIn();
         return inflater.inflate(R.layout.activity_message_list, container, false);
@@ -199,7 +206,10 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     private void attemptSend() {
         Log.i(TAG, "Username: " + mUsername);
         if (null == mUsername) return;
-        if (!mSocket.connected()) return;
+        if (!mSocket.connected()) {
+            Log.d(TAG, "socket not connected");
+            return;
+        }
 
         String message = mInputMessageView.getText().toString().trim();
         if (TextUtils.isEmpty(message)) {
@@ -210,7 +220,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         mInputMessageView.setText("");
         addMessage(mUsername, message);
 
-        Log.i(TAG, mUsername + " sent message: " + message);
+        Log.d(TAG, mUsername + " sent message: " + message);
 
         // perform the sending message attempt.
         mSocket.emit("new message", message);

@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_messages:
                     //toolbar.setTitle("");
-                    fragment = new MessagesFragment();
+                    //TODO change to chat list
+                    fragment = new ChatListActivity();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_profile:

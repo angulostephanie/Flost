@@ -1,4 +1,4 @@
-package com.specialtopics.flost.Models;
+package com.specialtopics.flost.Controllers;
 
 
 import java.text.SimpleDateFormat;

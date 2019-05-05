@@ -24,6 +24,7 @@ public class Message {
 //        id = this.hashCode();
 //    }
 
+    // TODO add chatroom ID(hash on two email), receiver email, remove sender names
     // This constructor is needed for when the REST client fetches messages
     public Message(Integer id, String timestamp, String senderName, String senderEmail, String messageContent) {
         this.id = id;
