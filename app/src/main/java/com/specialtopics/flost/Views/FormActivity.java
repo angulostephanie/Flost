@@ -38,12 +38,26 @@ public class FormActivity extends AppCompatActivity  {
         viewPager.setAdapter(fragmentPagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(9);
+
+        mContext = this;
+        setUpBtnListeners();
+
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            // optional
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+        });
+
+
+    }
+
+    public void setUpBtnListeners(){
         nextPageButton = findViewById(R.id.nextPageButton);
         previousPageButton = findViewById(R.id.previousPageButton);
         backButton = findViewById(R.id.back_button);
-        mContext = this;
-
-
         backButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -69,21 +83,15 @@ public class FormActivity extends AppCompatActivity  {
                     viewPager.setCurrentItem(getNextPossibleItemIndex(1));
             }
         });
-
-
     }
-
 
     public void hidePrevButton(){
         previousPageButton.setVisibility(View.INVISIBLE);
     }
-
     public void showPrevButton(){ previousPageButton.setVisibility(View.VISIBLE); }
-
     public void hideNextButton(){
         nextPageButton.setVisibility(View.INVISIBLE);
     }
-
     public void showNextButton(){
         nextPageButton.setVisibility(View.VISIBLE);
     }
