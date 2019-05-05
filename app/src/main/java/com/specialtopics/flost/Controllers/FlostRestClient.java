@@ -20,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.specialtopics.flost.Models.ChatRoom;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.Models.Message;
 import com.specialtopics.flost.R;
@@ -245,6 +246,7 @@ public class FlostRestClient {
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
                         Log.d(TAG, "failed, message can't be sent :/");
+                        if(errorResponse != null) Log.d(TAG, "ERROR in postMessageHelper ::" + errorResponse.toString());
                     }
 
                     @Override
@@ -261,26 +263,27 @@ public class FlostRestClient {
         }
     }
 
-    public static List<Message> getMessages(Context mContext, String senderEmail, String receiverEmail) {
+    public static List<Message> getMessages(Context mContext, int chatRoomID, String senderEmail) {
         Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
-            return FlostRestClient.getMessagesHelper(mContext, account.getIdToken(), senderEmail, receiverEmail);
+            return FlostRestClient.getMessagesHelper(mContext, account.getIdToken(), chatRoomID, senderEmail);
         } catch (ApiException e) {
             Log.w(TAG, "Google sign in failed", e);
         }
         return null;
     }
-    private static List<Message> getMessagesHelper(Context mContext, String token,
-                                                  String senderEmail, String receiverEmail) {
+
+    private static List<Message> getMessagesHelper(Context mContext, String token, int chatRoomID,
+                                                  String senderEmail) {
         String url = MAIN_URL + "/getMessages";
         JSONObject jsonParams = new JSONObject();
         final List<Message> messages = new ArrayList<>();
 
         try {
             jsonParams.put("token", token);
+            jsonParams.put("chat_room_id", chatRoomID);
             jsonParams.put("sender_email", senderEmail);
-            jsonParams.put("receiver_email", receiverEmail);
 
             Log.d(TAG, "currently in json params " + jsonParams.toString());
             try {
@@ -295,7 +298,7 @@ public class FlostRestClient {
                         for(int i = 0; i < array.length(); i++) {
                             try {
                                 JSONObject obj = array.getJSONObject(i);
-                                // TODO: add the chat room id here (Di)
+                                // TODO: add the chat room id here (Di)!! pls
                                 Message message = new Message(obj.getInt("message_id"),
                                         obj.getString("sender_email"),
                                         obj.getString("receiver_email"),
@@ -312,6 +315,7 @@ public class FlostRestClient {
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
                         Log.d(TAG, "can't fetch messages rn :/");
+                        if(errorResponse != null) Log.d(TAG, "ERROR in getMessagesHelper ::" + errorResponse.toString());
 
                     }
 
@@ -377,6 +381,139 @@ public class FlostRestClient {
         } catch(JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+       This will help us populate the Message Fragment List View with all the
+       chat rooms the current user is a part of.
+    */
+    public static List<ChatRoom> getChatRooms(Context mContext, int chatRoomID, String currentEmail) {
+        Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            return FlostRestClient.getChatRoomsHelper(mContext, account.getIdToken(), chatRoomID, currentEmail);
+        } catch (ApiException e) {
+            Log.w(TAG, "getChatRooms :: Google sign in failed", e);
+        }
+        return null;
+    }
+
+    private static List<ChatRoom> getChatRoomsHelper(Context mContext, String token, int chatRoomID,
+                                                     String currentEmail) {
+        String url = MAIN_URL + "/getChatRooms";
+        JSONObject jsonParams = new JSONObject();
+        final List<ChatRoom> chatRooms = new ArrayList<>();
+        try {
+            jsonParams.put("token", token);
+            jsonParams.put("chat_room_id", chatRoomID); // int
+            jsonParams.put("current_email", currentEmail);
+            Log.d(TAG, "getChatRoomsHelper");
+            Log.d(TAG, "getting all the chat rooms you're in :)");
+            try {
+                StringEntity entity = new StringEntity(jsonParams.toString());
+                client.get(mContext, url, entity, CONTENT_TYPE, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray array) {
+                        // Pull out the first event on the public timeline
+                        Log.d(TAG, "JSONArray returned");
+                        Log.d(TAG, array.toString());
+
+                        for(int i = 0; i < array.length(); i++) {
+                            try {
+                                JSONObject obj = array.getJSONObject(i);
+                                ChatRoom chatRoom = new ChatRoom(obj.getInt("chat_room_id"), currentEmail);
+                                chatRooms.add(chatRoom);
+                                Log.d(TAG, obj.toString());
+                            } catch(JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.d(TAG, "can't fetch your chat rooms rn (getChatRoomsHelper) :/");
+                        if(errorResponse != null) Log.d(TAG, "ERROR in getChatRoomsHelper ::" + errorResponse.toString());
+
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        // add a progress bar animation here! :)
+                    }
+                });
+            } catch(UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+        return chatRooms;
+    }
+
+    // returns a list of strings, specifically list of emails.
+    public static List<String> getUsersInChatRoom(Context mContext, int chatRoomID) {
+        Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            return FlostRestClient.getUsersInChatRoomHelper(mContext, account.getIdToken(), chatRoomID);
+        } catch (ApiException e) {
+            Log.w(TAG, "getUsersInChatRoom :: Google sign in failed", e);
+        }
+        return null;
+    }
+    private static List<String> getUsersInChatRoomHelper(Context mContext, String token, int chatRoomID) {
+        String url = MAIN_URL + "/getUsersInChatRoom";
+        JSONObject jsonParams = new JSONObject();
+        final List<String> emails = new ArrayList<>();
+        try {
+            jsonParams.put("token", token);
+            jsonParams.put("chat_room_id", chatRoomID);
+            Log.d(TAG, "getUsersInChatRoomHelper");
+            Log.d(TAG, "getting users in chat room oooo");
+            try {
+                StringEntity entity = new StringEntity(jsonParams.toString());
+                client.get(mContext, url, entity, CONTENT_TYPE, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray array) {
+                        // Pull out the first event on the public timeline
+                        Log.d(TAG, "JSONArray returned");
+                        Log.d(TAG, array.toString());
+
+                        for(int i = 0; i < array.length(); i++) {
+                            try {
+                                JSONObject obj = array.getJSONObject(i);
+                                emails.add(obj.getString("email"));
+                                Log.d(TAG, obj.toString());
+                            } catch(JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Log.d(TAG, "can't fetch emails from chat room rn " +
+                                "(getUsersInChatRoomHelper) :/");
+                        if(errorResponse != null) Log.d(TAG, "ERROR in getUsersInChatRoomHelper ::" + errorResponse.toString());
+
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                        // add a progress bar animation here! :)
+                    }
+                });
+
+            } catch(UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+        return emails;
     }
 
     private static void postItemImage(Context mContext, byte[] image, int key) {
