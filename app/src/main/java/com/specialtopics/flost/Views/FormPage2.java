@@ -24,6 +24,7 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
     Fragment nextFrag;
     int page;
     FormActivity activity;
+    boolean answered = false;
 
     public static FormPage2 newInstance() {
         FormPage2 fragment = new FormPage2();
@@ -51,6 +52,10 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
 
         if (isVisibleToUser && activity != null) {
             activity.showPrevButton();
+            if(!answered)
+                activity.hideNextButton();
+            else
+                activity.showNextButton();
         }
     }
 
@@ -92,6 +97,7 @@ public class FormPage2 extends Fragment implements OnFormDataListener {
 
     @Override
     public void passDataThrough() {
+        answered = true;
         ((FormPage3) nextFrag).onFormDataReceived(newItem);
     }
 }

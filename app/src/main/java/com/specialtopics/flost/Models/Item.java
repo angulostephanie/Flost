@@ -127,6 +127,7 @@ public class Item implements Parcelable {
     public void setImage(byte[] image) { this.image = image; }
     public void setCanFetchImage(boolean canFetchImage) { this.canFetchImage = canFetchImage; }
     public void setStaticImageID(int staticImageID) { this.staticImageID = staticImageID; }
+    public void setItemID(int id){ this.itemID = id; }
 
 
     public int getItemID() { return itemID; }
@@ -146,6 +147,11 @@ public class Item implements Parcelable {
     public int hashCode() {
         return Math.abs(Objects.hash(name, desc, type,
                 inputDay, inputTime, location, email, containsStaticImage, System.currentTimeMillis()));
+    }
+
+    public int createHashCode() {
+        return Math.abs(Objects.hash(this.name, this.desc, this.type,
+                this.inputDay, this.inputTime, this.location, this.email, this.containsStaticImage, System.currentTimeMillis()));
     }
     public static List<Item> getTemporaryData(){
         List<Item> list = new ArrayList<>();

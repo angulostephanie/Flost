@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 import com.specialtopics.flost.Utils;
@@ -22,6 +23,8 @@ public class FormPage1 extends Fragment {
     Item newItem;
     Fragment nextFrag;
     int page;
+    String email;
+    boolean answered;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,12 +49,16 @@ public class FormPage1 extends Fragment {
 
         if (isVisibleToUser  && activity != null) {
             activity.hidePrevButton();
-            activity.hideNextButton();
+            if(!answered)
+                activity.hideNextButton();
+            else
+                activity.showNextButton();
         }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        answered = false;
         nextFrag = Utils.getNextFrag(getActivity(), page);
         find_button = view.findViewById(R.id.find_item_btn);
         lost_button = view.findViewById(R.id.lost_item_btn);
@@ -61,11 +68,13 @@ public class FormPage1 extends Fragment {
 
         title = view.findViewById(R.id.tv_q1);
         title.setText(Utils.getQ1());
-
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        newItem.setEmail(email);
     }
     public View.OnClickListener createOnClickListeners() {
         View.OnClickListener btnClickListeners = new View.OnClickListener() {
             public void onClick(View v) {
+                answered = true;
                 switch (v.getId()) {
                     case R.id.find_item_btn:
                         focusButton(find_button, lost_button);

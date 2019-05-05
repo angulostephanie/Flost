@@ -2,7 +2,6 @@ package com.specialtopics.flost.Views;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,11 +14,13 @@ import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.specialtopics.flost.Controllers.FlostRestClient;
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.OnFormDataListener;
 import com.specialtopics.flost.R;
 import com.specialtopics.flost.Utils;
-import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -30,6 +31,7 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
     private Button cameraButton;
     public ImageView mImageview;
     private StorageReference mStorage;
+    Button finishBtn;
     private static final int CAMERA_REQUEST_CODE = 1;
     private static final int GALLERY_INTENT = 2;
 
@@ -63,6 +65,19 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
         title.setText(Utils.getQ8());
         uploadButton = view.findViewById(R.id.upload_btn);
         cameraButton = view.findViewById(R.id.camera_btn);
+        finishBtn = view.findViewById(R.id.finish_btn);
+        finishBtn.setVisibility(View.INVISIBLE);
+
+        finishBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FlostRestClient.postItem(getContext(),newItem);
+                newItem.setItemID(newItem.createHashCode());
+                Log.d("test", "Finsh btn clicked");
+                Intent  intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,19 +125,17 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("hi", "1");
         if (requestCode == GALLERY_INTENT && resultCode == RESULT_OK){
-            Log.d("hi", "2");
-            final Uri uri = data.getData();
-            Picasso.get().load(uri).fit().centerCrop().into(mImageview);
-        }
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
-            Log.d("hi", "3");
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             mImageview.setImageBitmap(photo);
-            Uri uri1 = data.getData();
-            Picasso.get().load(uri1).fit().centerCrop().into(mImageview);
-
+            finishBtn.setVisibility(View.VISIBLE);
+            setImageHelper(photo);
+        }
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            mImageview.setImageBitmap(photo);
+            finishBtn.setVisibility(View.VISIBLE);
+            setImageHelper(photo);
         }
     }
 
@@ -130,6 +143,13 @@ public class FormPage8 extends Fragment implements OnFormDataListener {
     public void onFormDataReceived(Item item) {
         newItem = item;
         Log.d("test", newItem.toString());
+    }
+
+    public void setImageHelper(Bitmap photo){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        byte[] bitmapdata = stream.toByteArray();
+        newItem.setImage(bitmapdata);
     }
 
     @Override

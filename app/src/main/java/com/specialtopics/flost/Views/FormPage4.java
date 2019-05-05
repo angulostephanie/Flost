@@ -26,6 +26,9 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
     Spinner spinnerDay, spinnerTime;
     int page;
     Fragment nextFrag;
+    boolean answered = false;
+    boolean spinnerTimeFlag = false;
+    boolean spinnerDayFlag = false;
 
     public static FormPage4 newInstance() {
         FormPage4 fragment = new FormPage4();
@@ -62,7 +65,10 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-
+            if(!answered)
+                activity.hideNextButton();
+            else
+                activity.showNextButton();
         }
 
     }
@@ -82,10 +88,13 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String chosenItem = (String) parent.getSelectedItem();
-
                 if(newItem != null) {
                     newItem.setInputDay(chosenItem);
+                    spinnerDayFlag = true;
                 }
+
+                if(spinnerDayFlag && spinnerTimeFlag)
+                    activity.showNextButton();
             }
 
             @Override
@@ -108,7 +117,10 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
 
                 if(newItem != null) {
                     newItem.setInputTime(chosenItem);
+                    spinnerTimeFlag = true;
                 }
+                if(spinnerDayFlag && spinnerTimeFlag)
+                    activity.showNextButton();
             }
 
             @Override
@@ -131,6 +143,6 @@ public class FormPage4 extends Fragment implements OnFormDataListener {
     @Override
     public void passDataThrough() {
         ((FormPage5) nextFrag).onFormDataReceived(newItem);
-        ((FormPage5) nextFrag).onFormDataReceived(newItem);
+        answered = true;
     }
 }

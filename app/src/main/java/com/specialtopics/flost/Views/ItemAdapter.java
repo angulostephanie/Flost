@@ -1,8 +1,11 @@
 package com.specialtopics.flost.Views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,13 +60,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Item item = mItemsList.get(position);
+        byte[] imageByte = item.getImage();
         holder.name.setText(item.getName());
-        holder.thumbnail.setImageResource(R.drawable.bottle);
-        if(matchFlag)
+
+        if (imageByte != null) {
+            Bitmap bmp = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
+            Log.d("bmp_check", String.valueOf(bmp));
+            holder.thumbnail.setImageBitmap(bmp);
+        }
+        //holder.thumbnail.setImageResource(item.getImage());
+        if (matchFlag)
             holder.match.setText("MATCH: "); //TODO: create util function that finds match percentage
         //holder.type.setText(item.getType());
         //holder.user.setText(item.getUserID());
     }
+
 
     @Override
     public int getItemCount() {

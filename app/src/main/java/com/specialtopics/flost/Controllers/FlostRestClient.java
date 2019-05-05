@@ -113,7 +113,7 @@ public class FlostRestClient {
             jsonParams.put("item_date", item.getInputDay());
             jsonParams.put("item_time", item.getInputTime());
             jsonParams.put("item_name", item.getName());
-            jsonParams.put("item_desc", item.getDesc());
+            jsonParams.put("item_desc", "temporary description");
             jsonParams.put("item_type", item.getType());
             jsonParams.put("item_location", item.getLocation());
 
