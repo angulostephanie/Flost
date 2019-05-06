@@ -1,6 +1,8 @@
 package com.specialtopics.flost.Views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -23,15 +25,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 public class HomeFragmentFound extends android.support.v4.app.Fragment {
     final static String TAG = "HomeFragmentFound";
+    private static final int FROM_HOME_RESULT_CODE = 1234;
     ItemAdapter mAdapter;
     RecyclerView recyclerView;
-    List<Item> mItems = Item.getTemporaryData();
+    List<Item> mItems = new ArrayList<>();
     FloatingActionButton addBtn;
     FirebaseUser mUser;
     Context mContext;
@@ -54,7 +58,9 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState){
         mContext = getContext();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        setUpRecyclerView(view);
+        recyclerView = view.findViewById(R.id.found_recycler_view);
+        setUpRecyclerView();
+
 
         addBtn = view.findViewById(R.id.fabAddFound);
         Utils.setUpStartFormBtns(addBtn, getActivity());
@@ -124,8 +130,7 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         });
     }
 
-    private void setUpRecyclerView(View view) {
-        recyclerView = view.findViewById(R.id.found_recycler_view);
+    private void setUpRecyclerView() {
         mAdapter = new ItemAdapter(getActivity(), mItems, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
@@ -133,6 +138,27 @@ public class HomeFragmentFound extends android.support.v4.app.Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         recyclerView.setNestedScrollingEnabled(false);
+
+        recyclerView.addOnItemTouchListener(new MyRecyclerItemClickListener(getContext(),
+                (view, position) -> {
+
+                    Item selectedItem = mItems.get(position);
+                    Intent intent = new Intent(getContext(), ItemDetailActivity.class);
+                    intent.putExtra("item", selectedItem);
+                    startActivityForResult(intent, FROM_HOME_RESULT_CODE);
+                }));
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == FROM_HOME_RESULT_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                Intent refreshIntent = new Intent(mContext, MainActivity.class);
+                startActivity(refreshIntent);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
+    }
 }
