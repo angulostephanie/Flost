@@ -1,6 +1,7 @@
 package com.specialtopics.flost.Views;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "ProfileFragment";
+    private static final int FROM_HOME_RESULT_CODE = 12;
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -73,7 +75,8 @@ public class ProfileFragment extends Fragment {
         mUser = mAuth.getCurrentUser();
         email = mUser.getEmail();
         fetchItems(email);
-        setUpRecyclerView(view);
+        recyclerView = view.findViewById(R.id.profile_recycler_view);
+        setUpRecyclerView();
         Log.d("UserID", mUser.getUid());
 
         emailTextView = view.findViewById(R.id.profile_header_tv);
@@ -178,8 +181,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void setUpRecyclerView(View view) {
-        recyclerView = view.findViewById(R.id.profile_recycler_view);
+    private void setUpRecyclerView() {
         mAdapter = new ItemAdapter(getActivity(), mItems, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false);
@@ -187,6 +189,28 @@ public class ProfileFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         recyclerView.setNestedScrollingEnabled(false);
+
+        recyclerView.addOnItemTouchListener(new MyRecyclerItemClickListener(getContext(),
+                (view, position) -> {
+
+                    Item selectedItem = mItems.get(position);
+                    Intent intent = new Intent(getContext(), ItemDetailActivity.class);
+                    intent.putExtra("item", selectedItem);
+                    startActivityForResult(intent, FROM_HOME_RESULT_CODE);
+                }));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == FROM_HOME_RESULT_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                Intent refreshIntent = new Intent(mContext, MainActivity.class);
+                startActivity(refreshIntent);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
     }
 
 }

@@ -39,7 +39,7 @@ public class FormActivity extends AppCompatActivity  {
         viewPager.setAdapter(fragmentPagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(9);
-
+        hidePrevButton();
         mContext = this;
         setUpBtnListeners();
 

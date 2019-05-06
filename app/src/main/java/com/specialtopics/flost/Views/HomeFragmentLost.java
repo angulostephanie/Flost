@@ -28,7 +28,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class HomeFragmentLost extends android.support.v4.app.Fragment {
+public class HomeFragmentLost extends android.support.v4.app.Fragment implements SearchViewListener{
     private static final String TAG = "HomeFragmentLost";
     private static final int FROM_HOME_RESULT_CODE = 1234;
     Context mContext;
@@ -153,5 +153,10 @@ public class HomeFragmentLost extends android.support.v4.app.Fragment {
             if (resultCode == Activity.RESULT_CANCELED) {
             }
         }
+    }
+    @Override
+    public void notifyFrag(String text) {
+        Log.d(TAG, "notifying");
+        mAdapter.getFilter().filter(text);
     }
 }

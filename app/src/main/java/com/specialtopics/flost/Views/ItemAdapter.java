@@ -9,23 +9,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> implements Filterable {
 
     private Context context;
     private List<Item> mItemsList;
+    private List<Item> filteredList;
     private boolean matchFlag; // flags true if adapter is used for the match view (formpage8)
 
     public ItemAdapter(Context context, List<Item> itemList, boolean match){
         this.context = context;
         this.mItemsList = itemList;
+        this.filteredList = itemList;
         this.matchFlag = match;
     }
 
@@ -59,7 +64,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Item item = mItemsList.get(position);
+        Item item = filteredList.get(position);
         byte[] imageByte = item.getImage();
         holder.name.setText(item.getName());
 
@@ -78,6 +83,45 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mItemsList.size();
+        return filteredList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                filteredList = (List<Item>) results.values;
+                notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<Item> filteredResults = null;
+                if (constraint.length() == 0) {
+                    filteredResults = mItemsList;
+                } else {
+                    filteredResults = getFilteredResults(constraint.toString().toLowerCase());
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = filteredResults;
+
+                return results;
+            }
+        };
+    }
+
+    protected List<Item> getFilteredResults(String constraint) {
+        List<Item> results = new ArrayList<>();
+
+        for (Item item : mItemsList) {
+            if (item.getName().toLowerCase().contains(constraint)) {
+                results.add(item);
+                Log.d("HomeFragmentFound", item.getName());
+            }
+        }
+        return results;
     }
 }

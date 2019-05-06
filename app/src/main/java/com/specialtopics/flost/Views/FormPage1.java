@@ -100,6 +100,6 @@ public class FormPage1 extends Fragment {
         focusButton.setTextColor(getResources().getColor(R.color.white));
         unfocusButton.setBackground(getResources().getDrawable(R.drawable.spinner_style));
         //unfocusButton.setBackgroundColor(getResources().getColor(R.color.white));
-        //unfocusButton.setTextColor(getResources().getColor(R.color.black));
+        unfocusButton.setTextColor(getResources().getColor(R.color.white));
     }
 }

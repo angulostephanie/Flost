@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +22,7 @@ import com.specialtopics.flost.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends android.support.v4.app.Fragment {
+public class HomeFragment extends android.support.v4.app.Fragment{
     private static final String TAG = "HomeFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -34,11 +35,14 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     private List<Item> mItems = new ArrayList<>();
     private RecyclerView recyclerView;
     private ItemAdapter mAdapter;
+    Fragment fragment;
     private View view;
     private TabLayout tabLayout;
     private FrameLayout frameLayout;
     private ToggleButton mapToggle;
+    boolean fragLost = true;
     private Utils utils = new Utils();
+    SearchView searchView;
     FragmentTransaction transaction;
 
     public HomeFragment(){
@@ -78,9 +82,25 @@ public class HomeFragment extends android.support.v4.app.Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         frameLayout = view.findViewById(R.id.result_framelayout);
+        searchView = view.findViewById(R.id.search_view);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                if(!fragLost)
+                    ((HomeFragmentFound)fragment).notifyFrag(text);
+                else
+                    ((HomeFragmentLost)fragment).notifyFrag(text);
+                return true;
+            }
+        });
         
         setUpTabListeners();
-
         setUpMapToggle();
 
     }
@@ -101,19 +121,22 @@ public class HomeFragment extends android.support.v4.app.Fragment {
     private void setUpTabListeners(){
         tabLayout = view.findViewById(R.id.tabLayout);
         transaction = getFragmentManager().beginTransaction();
-        Utils.loadFragment(new HomeFragmentLost(), R.id.result_framelayout, transaction);
+        fragment = new HomeFragmentLost();
+        Utils.loadFragment(fragment, R.id.result_framelayout, transaction);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // get the current selected tab's position and replace the fragment accordingly
-                Fragment fragment = null;
+                //Fragment fragment = null;
                 switch (tab.getPosition()) {
                     case 0:
                         fragment = new HomeFragmentLost();
+                        fragLost = true;
                         break;
                     case 1:
                         fragment = new HomeFragmentFound();
+                        fragLost = false;
                         break;
                 }
                 transaction = getFragmentManager().beginTransaction();
