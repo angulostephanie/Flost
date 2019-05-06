@@ -343,6 +343,7 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         // tag: incoming message is 1, no need to push to database
         // tag: sending-out message is 0, needs to push to database
         if(tag == 0) {
+            Log.d(TAG, "message info " + chatroom + "," + message + ", " + newMessage.getMessageId());
             FlostRestClient.postMessage(getContext(), newMessage);
         }
 

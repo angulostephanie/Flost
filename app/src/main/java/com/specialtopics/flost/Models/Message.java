@@ -1,6 +1,7 @@
 package com.specialtopics.flost.Models;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Message {
 
@@ -111,7 +112,7 @@ public class Message {
 //    }
 
     public int hashCode() {
-        return Math.abs(Objects.hash(mReceiverEmail, mSenderEmail, mMessage, createdAt));
+        return Objects.hash(mReceiverEmail, mSenderEmail, mMessage, createdAt, chatroomId + new Random().nextInt(100000));
     }
 
 }
