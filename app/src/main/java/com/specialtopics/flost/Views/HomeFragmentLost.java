@@ -1,6 +1,8 @@
 package com.specialtopics.flost.Views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,6 +30,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class HomeFragmentLost extends android.support.v4.app.Fragment {
     private static final String TAG = "HomeFragmentLost";
+    private static final int FROM_HOME_RESULT_CODE = 1234;
     Context mContext;
     ItemAdapter mAdapter;
     List<Item> mItems = new ArrayList<>();
@@ -128,5 +131,27 @@ public class HomeFragmentLost extends android.support.v4.app.Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
         recyclerView.setNestedScrollingEnabled(false);
+
+        recyclerView.addOnItemTouchListener(new MyRecyclerItemClickListener(getContext(),
+                (view, position) -> {
+
+                    Item selectedItem = mItems.get(position);
+                    Intent intent = new Intent(getContext(), ItemDetailActivity.class);
+                    intent.putExtra("item", selectedItem);
+                    startActivityForResult(intent, FROM_HOME_RESULT_CODE);
+        }));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == FROM_HOME_RESULT_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+                Intent refreshIntent = new Intent(mContext, MainActivity.class);
+                startActivity(refreshIntent);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
     }
 }

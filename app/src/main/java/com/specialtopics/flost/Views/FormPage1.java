@@ -71,6 +71,7 @@ public class FormPage1 extends Fragment {
         email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         newItem.setEmail(email);
     }
+
     public View.OnClickListener createOnClickListeners() {
         View.OnClickListener btnClickListeners = new View.OnClickListener() {
             public void onClick(View v) {
@@ -97,7 +98,8 @@ public class FormPage1 extends Fragment {
     public void focusButton(Button focusButton, Button unfocusButton){
         focusButton.setBackgroundColor(getResources().getColor(R.color.themecolor));
         focusButton.setTextColor(getResources().getColor(R.color.white));
-        unfocusButton.setBackgroundColor(getResources().getColor(R.color.white));
-        unfocusButton.setTextColor(getResources().getColor(R.color.black));
+        unfocusButton.setBackground(getResources().getDrawable(R.drawable.spinner_style));
+        //unfocusButton.setBackgroundColor(getResources().getColor(R.color.white));
+        //unfocusButton.setTextColor(getResources().getColor(R.color.black));
     }
 }

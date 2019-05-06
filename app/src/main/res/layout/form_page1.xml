@@ -20,6 +20,7 @@
         <Button
             android:id="@+id/find_item_btn"
             android:layout_width="152dp"
+            android:background="@drawable/spinner_style"
             android:layout_height="133dp"
             android:text="FIND AN ITEM"
             android:layout_alignParentLeft="true" />
@@ -28,6 +29,7 @@
             android:id="@+id/lost_item_btn"
             android:layout_width="152dp"
             android:layout_height="133dp"
+            android:background="@drawable/spinner_style"
             android:text="LOSE AN ITEM"
             android:layout_alignParentRight="true" />
     </RelativeLayout>

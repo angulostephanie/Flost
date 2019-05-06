@@ -64,6 +64,7 @@ public class FlostRestClient {
         }
     }
 
+
     public static void getItems(Context mContext, String type, JsonHttpResponseHandler jsonHttpResponseHandler) {
         Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
         try {
@@ -164,6 +165,7 @@ public class FlostRestClient {
         }
 
     }
+
     private static void deleteItemHelper(Context mContext, String token, Item item) {
         String url = MAIN_URL + "/deleteItem";
         JSONObject jsonParams = new JSONObject();

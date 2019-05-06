@@ -172,8 +172,8 @@ public class Item implements Parcelable {
         email = in.readString();
         timeStamp = in.readString();
         containsStaticImage = (boolean) in.readValue(null);
-        byte[] value = new byte[in.readInt()];
-        in.readByteArray(this.image);
+        image = new byte[in.readInt()];
+        in.readByteArray(image);
         staticImageID = in.readInt();
         inputTime = in.readString();
         inputDay = in.readString();
@@ -193,6 +193,7 @@ public class Item implements Parcelable {
         dest.writeString(email);
         dest.writeString(timeStamp);
         dest.writeValue(containsStaticImage);
+        dest.writeInt(image.length);
         dest.writeByteArray(image);
         dest.writeInt(staticImageID);
         dest.writeString(inputTime);

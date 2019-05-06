@@ -36,6 +36,7 @@
         <activity android:name="com.specialtopics.flost.Views.ChatActivity">
 
         </activity>
+        <activity android:name=".Views.ItemDetailActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
