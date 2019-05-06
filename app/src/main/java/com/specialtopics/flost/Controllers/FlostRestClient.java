@@ -38,7 +38,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class FlostRestClient {
     private final static String TAG = "FlostRestClient";
-    private final static String MAIN_URL =  "http://52.52.100.133:88"; // "http://10.0.2.2:8080";
+    private final static String MAIN_URL =  "http://52.52.100.133:80"; // "http://10.0.2.2:8080";
     private final static String CONTENT_TYPE = "application/json";
     private static final String GS_BUCKET = "gs://flostapp-1556168232146.appspot.com/";
     private final static AsyncHttpClient client = new AsyncHttpClient();
