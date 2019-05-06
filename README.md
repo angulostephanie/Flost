@@ -1,17 +1,17 @@
 # Flost
 An Android app that centralizes all lost and found things.
 
-Made by Stephanie Angulo, Di Hu, Emily Tran.
+Made by Di Hu, Emily Tran, Stephanie Angulo.
 
 ## Instructions
 
 ### Run Server
-1. CONNECT WITH EC2 INSTANCE: In your terminal, run the following command in the same directory as the provided pem file 
+1. *CONNECT WITH EC2 INSTANCE:* In your terminal, run the following command in the same directory as the provided pem file 
 ```
 ssh -i flostkeypair.pem ec2-user@ec2-52-52-100-133.us-west-1.compute.amazonaws.com
 ```
 
-2. START SERVER: Run the following command
+2. *START SERVER:* Run the following command
 
 ```
 sudo java -Dserver.port=80 -jar FlostServer-1.0-SNAPSHOT.jar
