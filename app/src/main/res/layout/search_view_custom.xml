@@ -19,6 +19,7 @@
             android:layout_width="356dp"
             android:layout_height="33dp"
             android:background="@drawable/border"
+            android:iconifiedByDefault="false"
             android:layout_marginRight="8dp"
             android:searchHintIcon="@android:drawable/ic_menu_search"
             android:searchIcon="@android:drawable/ic_menu_search" />

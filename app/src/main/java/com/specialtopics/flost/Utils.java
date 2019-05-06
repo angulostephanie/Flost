@@ -1,15 +1,12 @@
 package com.specialtopics.flost;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Views.FormActivity;
 
 import java.text.SimpleDateFormat;
@@ -58,31 +55,11 @@ public class Utils extends android.support.v4.app.Fragment {
 
     public static void setUpStartFormBtns(FloatingActionButton addBtn, Activity activity){
         addBtn.setOnClickListener(v -> {
-            /*
-            steph is just testing stuff here
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Item item = new Item(user.getEmail(), "iphone x",
-                    "rose gold, cracked screen, :///", "lost",
-                    "marketplace", Item.createTestByteArray(activity));
-            FlostRestClient.postItem(activity, item);
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            Item item = new Item(user.getEmail(), "headphones",
-                    "gray bose wireless headphones!!", "found",
-                    "marketplace", Item.createTestByteArray(activity));
-            Log.d(TAG, "gonna delete this item ;o");
-            FlostRestClient.deleteItem(activity, item);
-            */
-
-
-
             Intent mIntent = new Intent(activity, FormActivity.class);
             activity.startActivity(mIntent);
         });
     }
 
-    public static void setUpAddItemBtns(FloatingActionButton addBtn, FirebaseUser mUser, Context mContext){
-        addBtn.setOnClickListener(v -> { Log.d(TAG, "what");});
-    }
 
     public static String[] getRecentDays(){
         String[] days = new String[8];
