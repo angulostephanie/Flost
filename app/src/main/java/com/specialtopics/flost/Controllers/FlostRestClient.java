@@ -38,7 +38,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class FlostRestClient {
     private final static String TAG = "FlostRestClient";
-    private final static String MAIN_URL =  "http://52.52.100.133:80"; // "http://10.0.2.2:8080";
+    private final static String MAIN_URL =  "http://52.52.100.133:88"; // "http://10.0.2.2:8080";
     private final static String CONTENT_TYPE = "application/json";
     private static final String GS_BUCKET = "gs://flostapp-1556168232146.appspot.com/";
     private final static AsyncHttpClient client = new AsyncHttpClient();
@@ -221,6 +221,7 @@ public class FlostRestClient {
         String url = MAIN_URL + "/postMessage";
         JSONObject jsonParams = new JSONObject();
         try {
+            jsonParams.put("token", token);
             jsonParams.put("chat_room_id", message.getChatroomId()); // int
             jsonParams.put("message_id", message.getMessageId()); // int
             jsonParams.put("sender_email", message.getSenderEmail());
@@ -334,22 +335,24 @@ public class FlostRestClient {
         return messages;
     }
 
-    public static void createChatRoom(Context mContext, int chatRoomID, String ownerEmail) {
+    public static void createChatRoom(Context mContext, int chatRoomID, String ownerEmail, String receiverEmail) {
         Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
-            FlostRestClient.createChatRoomHelper(mContext, account.getIdToken(), chatRoomID, ownerEmail);
+            FlostRestClient.createChatRoomHelper(mContext, account.getIdToken(), chatRoomID, ownerEmail, receiverEmail);
         } catch (ApiException e) {
             Log.w(TAG, "createChatRoom :: Google sign in failed", e);
         }
     }
-    private static void createChatRoomHelper(Context mContext, String token, int chatRoomID, String ownerEmail) {
+    private static void createChatRoomHelper(Context mContext, String token, int chatRoomID, String ownerEmail, String receiverEmail) {
         String url = MAIN_URL + "/createChatRoom";
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("token", token);
             jsonParams.put("chat_room_id", chatRoomID); // int
-            jsonParams.put("owner_email", ownerEmail);
+            jsonParams.put("current_email", ownerEmail);
+            jsonParams.put("other_email", receiverEmail);
+
 
             Log.d(TAG, "chat room creation !");
             try {
@@ -365,7 +368,8 @@ public class FlostRestClient {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                         super.onFailure(statusCode, headers, throwable, errorResponse);
-                        Log.d(TAG, "failed, message can't be sent :/");
+                        Log.d(TAG, "failed, chat room  can't be sent :/");
+                        if(errorResponse != null) Log.d(TAG, "ERROR in createChatRoomHelper ::" + errorResponse.toString());
                     }
 
                     @Override
