@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -48,7 +49,7 @@ public class ProfileFragment extends Fragment {
     private Socket mSocket;
     private RecyclerView recyclerView;
     private ItemAdapter mAdapter;
-    private List<Item> mItems;
+    private List<Item> mItems = new ArrayList<>();
     private String email;
 
     public ProfileFragment(){
@@ -71,8 +72,8 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         email = mUser.getEmail();
-        //fetchItems(email);
-        //setUpRecyclerView(view);
+        fetchItems(email);
+        setUpRecyclerView(view);
         Log.d("UserID", mUser.getUid());
 
         emailTextView = view.findViewById(R.id.profile_header_tv);
@@ -115,7 +116,7 @@ public class ProfileFragment extends Fragment {
     };
 
     private void fetchItems(String email) {
-        FlostRestClient.getItems(mContext, email, new JsonHttpResponseHandler() {
+        FlostRestClient.getUsersItems(mContext, email, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray array) {
 
