@@ -1,6 +1,8 @@
 package com.specialtopics.flost.Controllers;
 
 import android.app.Application;
+import android.util.Log;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -15,6 +17,7 @@ public class ChatApplication extends Application {
         super.onCreate();
         try {
             mSocket = IO.socket(Constants.CHAT_SERVER_URL);
+
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

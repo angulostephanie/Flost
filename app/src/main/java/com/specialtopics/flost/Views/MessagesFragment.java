@@ -2,9 +2,7 @@ package com.specialtopics.flost.Views;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,14 +16,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.specialtopics.flost.Controllers.FlostRestClient;
-import com.specialtopics.flost.Models.Item;
 import com.specialtopics.flost.R;
 
 import com.specialtopics.flost.Controllers.ChatApplication;
@@ -56,11 +52,25 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     private String mUsername;
     private Boolean isConnected = true;
     private FirebaseUser mUser;
+    private int chatroom;
+    private String receiverEmail;
+    private RecyclerView mMessageRecycler;
+    private MessageListAdapter mMessageAdapter;
+
 
 //    private Handler mTypingHandler = new Handler();
 
     public MessagesFragment(){
         super();
+    }
+
+    public static MessagesFragment newInstace(Integer chatroomId, String receiverEmail){
+        MessagesFragment messagesFragment = new MessagesFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("receiver_email", receiverEmail);
+        bundle.putInt("chatroom_id", chatroomId);
+        messagesFragment.setArguments(bundle);
+        return messagesFragment;
     }
 
     // This event fires 1st, before creation of fragment or any views
@@ -82,6 +92,17 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mUsername = mUser.getDisplayName();
 
+
+
+        if(getArguments() != null) {
+            chatroom = getArguments().getInt("chatroom_id");
+
+        Log.d(TAG, "chatroom id: "+ chatroom);
+            receiverEmail = getArguments().getString("receiver_email");
+        } else {
+            Log.d(TAG, "passed in chatroom is 0");
+        }
+
         setHasOptionsMenu(true);
 
 
@@ -94,6 +115,8 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
         ChatApplication app = (ChatApplication) getActivity().getApplication();
         mSocket = app.getSocket();
         Log.i(TAG, "got socket!");
+        // TODO add server call back function
+        //mSocket.emit("join-room", room);
         mSocket.on(Socket.EVENT_CONNECT,onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
@@ -103,8 +126,16 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
 //        mSocket.on("stop typing", onStopTyping);
         mSocket.connect();
 
+        Log.d(TAG, "I am here");
+
+
+
+
+        Boolean bool = mSocket.connected();
+        Log.d(TAG, "socket created, connected? " + bool);
+
 //        startSignIn();
-        return inflater.inflate(R.layout.activity_message_list, container, false);
+        return inflater.inflate(R.layout.message_list_fragment, container, false);
     }
 
     @Override
@@ -199,7 +230,10 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
     private void attemptSend() {
         Log.i(TAG, "Username: " + mUsername);
         if (null == mUsername) return;
-        if (!mSocket.connected()) return;
+        if (!mSocket.connected()) {
+            Log.d(TAG, "socket not connected");
+            return;
+        }
 
         String message = mInputMessageView.getText().toString().trim();
         if (TextUtils.isEmpty(message)) {
@@ -207,10 +241,13 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
             return;
         }
 
-        mInputMessageView.setText("");
-        addMessage(mUsername, message);
+        // sending-message is tagged 0
+        int tag = 0;
 
-        Log.i(TAG, mUsername + " sent message: " + message);
+        mInputMessageView.setText("");
+        addMessage(mUsername, message,tag);
+
+        Log.d(TAG, mUsername + " sent message: " + message);
 
         // perform the sending message attempt.
         mSocket.emit("new message", message);
@@ -288,16 +325,26 @@ public class MessagesFragment extends android.support.v4.app.Fragment {
                     }
 
 //                    removeTyping(username);
-                    addMessage(username, message);
+
+                    // incoming message is tagged 1
+                    int tag = 1;
+                    addMessage(username, message, tag);
                 }
             });
         }
     };
 
-    private void addMessage(String username, String message) {
-        Message newMessage = new Message(username, mUser.getEmail(), message);
-        //TODO push message object to server
-        FlostRestClient.postMessage(getContext(), newMessage);
+
+    private void addMessage(String username, String message, int tag) {
+//        chatroom = -1;
+//        receiverEmail = "temp";
+        Message newMessage = new Message(chatroom, mUser.getEmail(), receiverEmail, message);
+
+        // tag: incoming message is 1, no need to push to database
+        // tag: sending-out message is 0, needs to push to database
+        if(tag == 0) {
+            FlostRestClient.postMessage(getContext(), newMessage);
+        }
 
         mMessages.add(newMessage);
         mAdapter.notifyItemInserted(mMessages.size() - 1);

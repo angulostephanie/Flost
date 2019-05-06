@@ -4,17 +4,13 @@ import java.util.Objects;
 
 public class Message {
 
-    private String mUsername;
     private String mMessage;
-    String mReceiverEmail;
-    String mReceiverName;
-    private String mSenderName;
+    private String mReceiverEmail;
     private String mSenderEmail;
-//    private User mReceiver; // I don't think we should have the entire User obj, probably just having their email is fine.
-//    private User mSender;
     private long createdAt;
     private String timestamp;
-    private int id;
+    private int messageId;
+    private int chatroomId;
 //    public static final int TYPE_MESSAGE = 0;
 //    public static final int TYPE_LOG = 1;
 //    public static final int TYPE_ACTION = 2;
@@ -28,25 +24,24 @@ public class Message {
 //    }
 
     // This constructor is needed for when the REST client fetches messages
-    public Message(Integer id, String timestamp, String senderName, String senderEmail, String messageContent) {
-        this.id = id;
-        this.timestamp = timestamp;
-        this.mSenderName = senderName;
+    public Message(Integer chatroomId, Integer messageId, String timestamp, String senderEmail, String receiverEmail, String messageContent) {
+        this.chatroomId = chatroomId;
+        this.messageId = messageId;
         this.mSenderEmail = senderEmail;
+        this.mReceiverEmail = receiverEmail;
         this.mMessage = messageContent;
-        //        this.mReceiverName = receiverName;
-//        this.mReceiverEmail = receiverEmail;
+        this.timestamp = timestamp;
     }
 
     // This constructor is needed for when the REST client pushes messages
-    public Message(String senderName, String senderEmail, String messageContent) {
-        id = this.hashCode();
-        this.timestamp = String.valueOf(this.getCreatedAt());
-        this.mSenderName = senderName;
+    public Message(Integer chatroomId, String senderEmail, String receiverEmail, String messageContent) {
+        this.chatroomId = chatroomId;
+        this.messageId = this.hashCode();
         this.mSenderEmail = senderEmail;
+        this.mReceiverEmail = receiverEmail;
         this.mMessage = messageContent;
-        //        this.mReceiverName = receiverName;
-//        this.mReceiverEmail = receiverEmail;
+        this.timestamp = String.valueOf(this.getCreatedAt());
+
     }
 
 //    public int getType() {
@@ -54,9 +49,9 @@ public class Message {
 //    };
 
 
-    public String getSenderName() {
-        return mSenderName;
-    }
+//    public String getSenderName() {
+//        return mSenderName;
+//    }
 
 //    public String getReceiverName() {
 //        return mReceiverName;
@@ -75,8 +70,17 @@ public class Message {
 //        return mReceiverEmail;
 //    }
 
-    public int getID() {
-        return id;
+
+    public String getReceiverEmail() {
+        return mReceiverEmail;
+    }
+
+    public int getChatroomId() {
+        return chatroomId;
+    }
+
+    public int getMessageId() {
+        return messageId;
     }
 
     public long getCreatedAt() {
