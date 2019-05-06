@@ -29,4 +29,5 @@ Make sure you have the project on Android Studio
 7. Paste the SHA1 from step 4 and save
 
 ### Using the App
+Before you start the app, please update Google Play Services on the emulator.
 After all of the previous steps, you should be able to run the Android app from Android Studio!
