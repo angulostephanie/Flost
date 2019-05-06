@@ -75,12 +75,42 @@ public class FlostRestClient {
             Log.w(TAG, "Google sign in failed", e);
         }
     }
+
     private static void getItemsHelper(Context mContext, String token, String type, JsonHttpResponseHandler jsonHttpResponseHandler) {
         String url = MAIN_URL + "/getItems";
         JSONObject jsonParams = new JSONObject();
 
         try {
             if(!type.isEmpty()) jsonParams.put("item_type", type);
+            jsonParams.put("token", token);
+            Log.d(TAG, "currently in json params " + jsonParams.toString());
+            try {
+                StringEntity entity = new StringEntity(jsonParams.toString());
+                client.get(mContext, url, entity, "application/json", jsonHttpResponseHandler);
+            } catch(UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getUsersItems(Context mContext, String email, JsonHttpResponseHandler jsonHttpResponseHandler) {
+        Task<GoogleSignInAccount> task = getGoogleSignInTask(mContext);
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            FlostRestClient.getUsersItemsHelper(mContext, account.getIdToken(), email, jsonHttpResponseHandler);
+        } catch (ApiException e) {
+            Log.w(TAG, "Google sign in failed", e);
+        }
+    }
+
+    private static void getUsersItemsHelper(Context mContext, String token, String email, JsonHttpResponseHandler jsonHttpResponseHandler) {
+        String url = MAIN_URL + "/getUsersItems";
+        JSONObject jsonParams = new JSONObject();
+
+        try {
+            jsonParams.put("email", email);
             jsonParams.put("token", token);
             Log.d(TAG, "currently in json params " + jsonParams.toString());
             try {
