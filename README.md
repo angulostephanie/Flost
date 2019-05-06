@@ -13,15 +13,10 @@ ssh -i flostkeypair.pem ec2-user@ec2-52-52-100-133.us-west-1.compute.amazonaws.c
 2. START SERVER: Run the following command
 ```
 
-### Install APK
-1. Install Android Studio
-2. Open AVD Manager and turn on an emulator (with Google Play Services)
-3. In the emulator, go to Google Play store and update Google Play Services 
-4. Drag the given APK file into the emulator screen. Your emulator will install the Flost app
-
 ### Add SHA 1 key 
 You won't be able to use Firebase authentication until you add your project's SHA1 key to the firebase project. We will add you as a project Firebase member of Flost. 
-1. Go to your Android Project
+Make sure you have the project on Android Studio
+1. Go to the Flost Android Project
 2. On the right hand side, click on Gradle
 3. Navigate to :app -> Tasks -> android -> signingReport. Double click on it
 4. Copy the generated SHA1 key under the variant name "debug"

@@ -35,7 +35,15 @@
         android:layout_height="30dp"
         android:text="logout" />
     </LinearLayout>
-
+    <TextView
+        style="@style/questionSubTitle"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Posts"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/profile_recycler_view"
         android:background="@color/lightGray"
