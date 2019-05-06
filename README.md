@@ -10,10 +10,14 @@ Made by Stephanie Angulo, Di Hu, Emily Tran.
 ```
 ssh -i flostkeypair.pem ec2-user@ec2-52-52-100-133.us-west-1.compute.amazonaws.com
 ```
+
 2. START SERVER: Run the following command
+
+```
+sudo java -Dserver.port=80 -jar FlostServer-1.0-SNAPSHOT.jar
 ```
 
-### Add SHA 1 key 
+### Add SHA 1 key to Firebase
 You won't be able to use Firebase authentication until you add your project's SHA1 key to the firebase project. We will add you as a project Firebase member of Flost. 
 Make sure you have the project on Android Studio
 1. Go to the Flost Android Project
