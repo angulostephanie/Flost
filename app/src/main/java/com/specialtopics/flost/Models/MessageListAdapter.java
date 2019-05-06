@@ -60,7 +60,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
         Message message = (Message) mMessageList.get(position);
 
-        if (message.getSenderName().equals(mUser.getDisplayName())) {
+        if (message.getSenderEmail().equals(mUser.getEmail())) {
             Log.e(TAG, "sent message returned.");
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
@@ -158,7 +158,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             // Format the stored timestamp into a readable String using method.
             timeText.setText(DateUtils.formatDateTime(message.getCreatedAt()));
 
-            nameText.setText(message.getSenderName());
+            nameText.setText(message.getSenderEmail());
 
             // TODO Insert the profile image from the URL into the ImageView.
             //Utils.displayRoundImageFromUrl(mContext, message.getSender().getProfileUrl(), profileImage);

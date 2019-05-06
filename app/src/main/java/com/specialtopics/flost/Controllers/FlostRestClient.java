@@ -221,12 +221,10 @@ public class FlostRestClient {
         String url = MAIN_URL + "/postMessage";
         JSONObject jsonParams = new JSONObject();
         try {
-            // TODO: replace hardcoded `chat_room_id` with message obj's chat room id
-            jsonParams.put("chat_room_id", 123); // int
-            jsonParams.put("message_id", message.getID()); // int
+            jsonParams.put("chat_room_id", message.getChatroomId()); // int
+            jsonParams.put("message_id", message.getMessageId()); // int
             jsonParams.put("sender_email", message.getSenderEmail());
-            // TODO: replace hardcoded `receiver_email` with receiver's email pls
-            jsonParams.put("receiver_email", "fake_user@oxy.edu");
+            jsonParams.put("receiver_email", message.getReceiverEmail());
             jsonParams.put("message_content", message.getMessage());
             jsonParams.put("message_timestamp", message.getCreatedAt());
 
@@ -298,8 +296,9 @@ public class FlostRestClient {
                         for(int i = 0; i < array.length(); i++) {
                             try {
                                 JSONObject obj = array.getJSONObject(i);
-                                // TODO: add the chat room id here (Di)!! pls
-                                Message message = new Message(obj.getInt("message_id"),
+                                Message message = new Message(
+                                        obj.getInt("chat_room_id"),
+                                        obj.getInt("message_id"),
                                         obj.getString("sender_email"),
                                         obj.getString("receiver_email"),
                                         obj.getString("message_content"),
